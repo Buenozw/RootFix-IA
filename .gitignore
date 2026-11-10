@@ -1,0 +1,21 @@
+# Segredos
+.env
+
+# Ambiente Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Gerados pelo scripts/indexar.py (recriados a cada indexação)
+data/vetores/*
+!data/vetores/.gitkeep
+
+# Cache dos modelos de embeddings baixados
+.cache/
+local_cache/
+
+# Editores e sistema
+.vscode/
+.idea/
+.DS_Store
