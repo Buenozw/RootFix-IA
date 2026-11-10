@@ -26,6 +26,7 @@ from app.memoria import pico_mb  # noqa: E402
 from app.preparacao import cabecalho_de_busca, dividir, limpar, metadados  # noqa: E402
 
 LOTE = 32  # trechos por chamada ao modelo de embeddings
+PAUSA_ENTRE_LOTES = 1.0  # segundos; evita estourar a cota por minuto do Gemini
 
 
 @dataclass
@@ -43,7 +44,8 @@ class Resumo:
 
 
 def indexar(pasta_raw: Path, pasta_processado: Path, pasta_vetores: Path, embedder: Embedder,
-            nome_colecao: str = config.nome_colecao) -> Resumo:
+            nome_colecao: str = config.nome_colecao, assinatura_modelo: str = "teste",
+            pausa: float = 0.0) -> Resumo:
     import chromadb
 
     inicio = time.perf_counter()
@@ -88,6 +90,8 @@ def indexar(pasta_raw: Path, pasta_processado: Path, pasta_vetores: Path, embedd
 
     vetores: list[list[float]] = []
     for i in range(0, len(documentos), LOTE):
+        if i and pausa:
+            time.sleep(pausa)
         vetores.extend(embedder(documentos[i : i + LOTE]))
 
     pasta_vetores.mkdir(parents=True, exist_ok=True)
@@ -96,7 +100,10 @@ def indexar(pasta_raw: Path, pasta_processado: Path, pasta_vetores: Path, embedd
         cliente.delete_collection(nome_colecao)
     colecao = cliente.create_collection(
         nome_colecao,
-        metadata={"hnsw:space": "cosine"},  # similaridade de cosseno: 1 = mesmo sentido, 0 = nada a ver
+        metadata={
+            "hnsw:space": "cosine",  # similaridade de cosseno: 1 = mesmo sentido, 0 = nada a ver
+            "embeddings": assinatura_modelo,  # a busca confere se usa o mesmo modelo
+        },
         embedding_function=None,  # os vetores vêm prontos do nosso modelo
     )
     colecao.add(ids=ids, documents=documentos, embeddings=vetores, metadatas=metas)
@@ -129,15 +136,21 @@ def main() -> int:
     parser.add_argument("--vetores", type=Path, default=config.pasta_vetores)
     args = parser.parse_args()
 
-    from app.embeddings import padrao
+    from app.embeddings import EmbeddingsIndisponiveis, assinatura, para_documentos
 
     def embedder(textos: list[str]) -> list[list[float]]:
-        # O modelo só é carregado se houver fichas válidas (na primeira vez ele é baixado)
-        if padrao.cache_info().currsize == 0:
-            print(f"Carregando o modelo de embeddings {config.embeddings_modelo}…")
-        return padrao()(textos)
+        # O modelo só é preparado se houver fichas válidas
+        if para_documentos.cache_info().currsize == 0:
+            print(f"Gerando embeddings com {assinatura()}…")
+        return para_documentos()(textos)
 
-    resumo = indexar(args.entrada, args.processado, args.vetores, embedder)
+    try:
+        resumo = indexar(args.entrada, args.processado, args.vetores, embedder, assinatura_modelo=assinatura(),
+                         pausa=PAUSA_ENTRE_LOTES if config.embeddings_provedor == "gemini" else 0.0)
+    except EmbeddingsIndisponiveis as erro:
+        print(f"Não foi possível gerar os embeddings: {erro}")
+        print("A base anterior, se existia, continua como estava.")
+        return 1
     imprimir(resumo)
     if resumo.fichas_indexadas == 0:
         print("\nNenhuma ficha válida: a base não foi criada. Colete as fichas em data/raw/ primeiro.")

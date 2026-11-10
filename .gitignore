@@ -7,9 +7,9 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
-# Gerados pelo scripts/indexar.py (recriados a cada indexação)
-data/vetores/*
-!data/vetores/.gitkeep
+# A base vetorial (data/vetores/) VAI para o Git: ela é criada uma vez na máquina, com os
+# embeddings do Gemini, para o Render não gastar cota da API a cada deploy. Recrie e faça
+# commit de novo sempre que mudar uma ficha.
 
 # Cache dos modelos de embeddings baixados
 .cache/

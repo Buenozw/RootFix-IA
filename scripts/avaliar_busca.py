@@ -235,11 +235,12 @@ def relatorio(r: dict) -> str:
     return "\n".join(linhas)
 
 
-def gravar_relatorio(texto: str, arquivo: Path = RELATORIO) -> None:
+def gravar_relatorio(texto: str, arquivo: Path = RELATORIO, inicio: str = INICIO, fim: str = FIM) -> None:
+    """Troca só a seção entre as marcas; o resto do arquivo (texto escrito à mão) fica igual."""
     atual = arquivo.read_text(encoding="utf-8") if arquivo.exists() else "# Avaliação\n\n"
-    if INICIO in atual and FIM in atual:
-        antes, _, resto = atual.partition(INICIO)
-        _, _, depois = resto.partition(FIM)
+    if inicio in atual and fim in atual:
+        antes, _, resto = atual.partition(inicio)
+        _, _, depois = resto.partition(fim)
         novo = antes + texto + depois
     else:
         novo = atual.rstrip() + "\n\n" + texto + "\n"
@@ -250,7 +251,8 @@ def main() -> int:
     import chromadb
 
     from app.config import config
-    from app.embeddings import padrao
+    from app.busca import BaseIncompativel
+    from app.embeddings import EmbeddingsIndisponiveis, assinatura, para_consultas
 
     casos = carregar_casos()
     try:
@@ -261,8 +263,12 @@ def main() -> int:
         print("Não encontrei a base vetorial ou ela está vazia. Rode python scripts/indexar.py antes.")
         return 1
 
-    print(f"Carregando o modelo de embeddings {config.embeddings_modelo}…")
-    r = avaliar(casos, Buscador(padrao(), colecao))
+    print(f"Buscando com {assinatura()}…")
+    try:
+        r = avaliar(casos, Buscador(para_consultas(), colecao, assinatura_esperada=assinatura()))
+    except (BaseIncompativel, EmbeddingsIndisponiveis) as erro:
+        print(erro)
+        return 1
     RESULTADO.write_text(json.dumps(r, ensure_ascii=False, indent=2), encoding="utf-8")
     gravar_relatorio(relatorio(r))
 

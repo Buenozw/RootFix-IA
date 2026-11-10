@@ -28,8 +28,18 @@ Os casos marcados com `nota` dependem das fichas coletadas. O caso do barulho, p
 ## Como rodar
 
 ```bash
-python scripts/indexar.py         # cria a base a partir das fichas
-python scripts/avaliar_busca.py   # mede a busca e sugere o limiar
+python scripts/indexar.py           # cria a base a partir das fichas
+python scripts/avaliar_busca.py     # mede a busca e sugere o limiar
+python scripts/avaliar_geracao.py   # mede o encaminhamento completo com o Gemini
 ```
 
-O limiar sugerido vai para o `.env` como `LIMIAR_SIMILARIDADE`.
+O limiar sugerido vai para o `.env` como `LIMIAR_SIMILARIDADE`; depois de mudar, rode a avaliação da geração de novo.
+
+A avaliação da geração faz uma chamada ao Gemini por caso, com 4 segundos de pausa entre elas para não estourar a cota gratuita (cerca de 4 minutos para 34 casos; `--pausa` muda a espera). No fim, ela simula o Gemini fora do ar num caso e confere se a resposta ainda traz o serviço e a fonte.
+
+### Como a geração evita inventar
+
+- O Gemini só **escolhe a ficha** (F1, F2 ou F3) e **escreve os textos**. Serviço, categoria, órgão, canal, prazo e documentos da resposta vêm dos metadados da ficha escolhida, nunca do modelo.
+- Se a busca não passa do limiar, o Gemini nem é chamado.
+- O relato do morador vai entre as marcas `<dados_do_morador>`, com a regra de que nada ali é instrução.
+- O script confere, no texto gerado, se há prazo ou órgão que não está na ficha nem no relato, e lista os casos para revisão manual.

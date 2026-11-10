@@ -1,0 +1,4 @@
+# Só para rodar com EMBEDDINGS_PROVEDOR=local (modelo na própria máquina).
+# Não use no Render: o modelo local passa do limite de 512 MB.
+-r requirements.txt
+fastembed==0.9.1

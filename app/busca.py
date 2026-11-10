@@ -50,13 +50,30 @@ class ResultadoBusca:
         return self.candidatos[0] if self.candidatos else None
 
 
+class BaseIncompativel(RuntimeError):
+    """A base foi criada com outro modelo de embeddings: os vetores não se comparam."""
+
+
+def conferir_assinatura(colecao, esperada: str) -> None:
+    criada_com = (colecao.metadata or {}).get("embeddings")
+    if criada_com != esperada:
+        raise BaseIncompativel(
+            f"A base foi criada com '{criada_com}', mas a busca está usando '{esperada}'. "
+            "Rode python scripts/indexar.py de novo ou ajuste EMBEDDINGS_PROVEDOR no .env."
+        )
+
+
 def texto_da_consulta(titulo: str, descricao: str) -> str:
     return f"{(titulo or '').strip()}. {(descricao or '').strip()}".strip(". ")
 
 
 class Buscador:
-    def __init__(self, embedder: Embedder, colecao=None, limiar: float | None = None):
+    def __init__(self, embedder: Embedder, colecao=None, limiar: float | None = None,
+                 assinatura_esperada: str | None = None):
         self.embedder = embedder
+        self.assinatura_esperada = assinatura_esperada
+        if colecao is not None and assinatura_esperada:
+            conferir_assinatura(colecao, assinatura_esperada)
         self._colecao = colecao
         self.limiar = config.limiar_similaridade if limiar is None else limiar
 
@@ -66,7 +83,10 @@ class Buscador:
             import chromadb
 
             cliente = chromadb.PersistentClient(path=str(config.pasta_vetores))
-            self._colecao = cliente.get_collection(config.nome_colecao)
+            colecao = cliente.get_collection(config.nome_colecao)
+            if self.assinatura_esperada:
+                conferir_assinatura(colecao, self.assinatura_esperada)
+            self._colecao = colecao
         return self._colecao
 
     def _consultar(self, vetor: list[float], categoria: str | None) -> list[Trecho]:
