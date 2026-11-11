@@ -43,3 +43,13 @@ A avaliação da geração faz uma chamada ao Gemini por caso, com 4 segundos de
 - Se a busca não passa do limiar, o Gemini nem é chamado.
 - O relato do morador vai entre as marcas `<dados_do_morador>`, com a regra de que nada ali é instrução.
 - O script confere, no texto gerado, se há prazo ou órgão que não está na ficha nem no relato, e lista os casos para revisão manual.
+
+## Testes de integração com a API Java (manuais)
+
+Feitos com `scripts/testar_integracao.py`, a API Java no Render e a conta de gestor de teste.
+
+| Data | Problema | Base na hora | Resultado | Análise |
+|---|---|---|---|---|
+| 10/11 | 2 · Buraco grande na avenida principal (Bela Vista, categoria Buraco ou pavimento) | 1 ficha: tapa-buraco da Subprefeitura Ipiranga | `encontrado: false` em 16,8 s; motivo: a ficha vale só para a Subprefeitura Ipiranga e o problema é na Bela Vista | Recusa correta. A Bela Vista é atendida pela Subprefeitura Sé; aceitar a ficha do Ipiranga mandaria o gestor cobrar o órgão errado, porque o órgão da resposta sai da ficha. Mostra que a regra "use só o que está na ficha" protege contra encaminhamento errado, e que a cobertura depende de ter fichas da subprefeitura de cada comunidade. |
+
+O tempo de 16,8 s veio quase todo da geração com o raciocínio padrão do modelo. Depois disso o serviço passou a pedir raciocínio mínimo (`GEMINI_RACIOCINIO=minimal`); a comparação de tempo entra na próxima linha desta tabela.

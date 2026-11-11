@@ -24,6 +24,7 @@ def _numero(nome: str, padrao: float) -> float:
 class Config:
     gemini_api_key: str
     gemini_modelo: str
+    gemini_raciocinio: str
     java_api_url: str
     embeddings_provedor: str
     embeddings_modelo: str
@@ -47,6 +48,7 @@ def carregar() -> Config:
         gemini_api_key=os.getenv("GEMINI_API_KEY", "").strip(),
         # Mesmo padrão da API Java (IA_MODELO no application.yml)
         gemini_modelo=os.getenv("GEMINI_MODELO", "").strip() or "gemini-3.5-flash",
+        gemini_raciocinio=os.getenv("GEMINI_RACIOCINIO", "").strip() or "minimal",
         java_api_url=os.getenv("JAVA_API_URL", "https://rootfix-java.onrender.com").strip().rstrip("/"),
         embeddings_provedor=provedor,
         embeddings_modelo=os.getenv("EMBEDDINGS_MODELO", "").strip() or MODELO_PADRAO[provedor],

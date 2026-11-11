@@ -5,6 +5,8 @@ Usado pelo POST /simular e, na etapa 6, pelo POST /encaminhar/{id}.
 
 from __future__ import annotations
 
+import logging
+import time
 from functools import lru_cache
 
 from app.anonimizacao import anonimizar
@@ -12,6 +14,9 @@ from app.busca import Buscador
 from app.embeddings import assinatura, para_consultas
 from app.gerador import Gerador
 from app.modelos import Encaminhamento, ProblemaAnonimo
+
+
+log = logging.getLogger("rootfix-ia.servico")
 
 
 class BaseAusente(RuntimeError):
@@ -44,6 +49,7 @@ def encaminhar(problema: ProblemaAnonimo, buscador: Buscador | None = None,
                gerador: Gerador | None = None) -> Encaminhamento:
     gerador = gerador or gerador_padrao()
     anonimo = anonimizar(problema)
+    inicio = time.perf_counter()
     try:
         busca = (buscador or buscador_padrao()).buscar(anonimo.titulo, anonimo.descricao, anonimo.categoria)
     except Exception as erro:
@@ -53,4 +59,7 @@ def encaminhar(problema: ProblemaAnonimo, buscador: Buscador | None = None,
             raise
         buscador_padrao.cache_clear()
         busca = buscador_padrao().buscar(anonimo.titulo, anonimo.descricao, anonimo.categoria)
+    melhor = busca.melhor.similaridade if busca.melhor else None
+    log.info("Busca em %.1f s: melhor similaridade %s, limiar %.2f, plano B %s",
+             time.perf_counter() - inicio, melhor, busca.limiar, busca.caiu_no_plano_b)
     return gerador.encaminhar(anonimo, busca)

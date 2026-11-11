@@ -107,3 +107,42 @@ def test_plano_b_devolve_a_busca_sem_texto(cliente):
     r = Gerador(cliente, modelo="m").encaminhar(PROBLEMA, BUSCA)
     assert r.encontrado and not r.texto_gerado
     assert r.servico == "Luz fictícia" and r.texto_solicitacao is None and r.fontes
+
+
+def test_raciocinio_minimo_por_padrao():
+    cliente = ClienteFalso(resposta())
+    Gerador(cliente, modelo="m", raciocinio="minimal").encaminhar(PROBLEMA, BUSCA)
+    assert cliente.pedidos[0]["config"].thinking_config.thinking_level.value == "MINIMAL"
+
+
+def test_raciocinio_padrao_nao_manda_configuracao():
+    cliente = ClienteFalso(resposta())
+    Gerador(cliente, modelo="m", raciocinio="padrao").encaminhar(PROBLEMA, BUSCA)
+    assert cliente.pedidos[0]["config"].thinking_config is None
+
+
+def test_modelo_que_recusa_o_raciocinio_tenta_de_novo_sem_ele():
+    from google.genai import errors
+
+    class RecusaRaciocinio(ClienteFalso):
+        def generate_content(self, model, contents, config):
+            if config.thinking_config is not None:
+                self.pedidos.append({"config": config})
+                raise errors.APIError(400, {"error": {"message": "thinking level not supported"}})
+            return super().generate_content(model, contents, config)
+
+    cliente = RecusaRaciocinio(resposta())
+    gerador = Gerador(cliente, modelo="m", raciocinio="minimal")
+    r = gerador.encaminhar(PROBLEMA, BUSCA)
+    assert r.texto_gerado and gerador.raciocinio == "PADRAO"
+    assert len(cliente.pedidos) == 2
+
+
+def test_plano_b_nao_repassa_orgao_de_ficha_de_outra_subprefeitura():
+    regional = candidato("Tapa fictício", "Buraco ou pavimento", 0.8, orgao="Subprefeitura Fictícia")
+    regional.meta["subprefeitura"] = "Fictícia"
+    busca = ResultadoBusca(True, [regional], "Buraco ou pavimento", False, 0.5)
+    r = Gerador(ClienteFalso(erro=TimeoutError()), modelo="m").encaminhar(PROBLEMA, busca)
+    assert r.encontrado and not r.texto_gerado
+    assert r.orgao is None
+    assert "Subprefeitura Fictícia" in r.aviso and r.fontes

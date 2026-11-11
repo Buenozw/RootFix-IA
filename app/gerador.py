@@ -105,14 +105,28 @@ def nao_encontrado(motivo: str | None = None) -> Encaminhamento:
 
 
 def so_busca(busca: ResultadoBusca) -> Encaminhamento:
-    """Plano B quando o Gemini falha: devolve o que a busca achou, sem texto gerado."""
-    return Encaminhamento(encontrado=True, **_campos_da_ficha(busca.melhor), texto_gerado=False,
-                          motivo_escolha="Ficha mais parecida com o relato, segundo a busca.", aviso=AVISO_SEM_TEXTO)
+    """Plano B quando o Gemini falha: devolve o que a busca achou, sem texto gerado.
+
+    Sem o Gemini não há quem confira se a ficha vale para a região do problema. Por isso, quando
+    a ficha é de uma subprefeitura específica, o órgão fica de fora e o aviso pede para conferir:
+    uma ficha do Ipiranga não pode mandar o gestor da Bela Vista cobrar o órgão do Ipiranga.
+    """
+    campos = _campos_da_ficha(busca.melhor)
+    aviso = AVISO_SEM_TEXTO
+    subprefeitura = busca.melhor.meta.get("subprefeitura")
+    if subprefeitura:
+        campos["orgao"] = None
+        aviso = (f"A ficha encontrada é da Subprefeitura {subprefeitura}: confirme qual órgão atende a região "
+                 f"do problema antes de enviar. {AVISO_SEM_TEXTO}")
+    return Encaminhamento(encontrado=True, **campos, texto_gerado=False,
+                          motivo_escolha="Ficha mais parecida com o relato, segundo a busca.", aviso=aviso)
 
 
 class Gerador:
-    def __init__(self, cliente=None, modelo: str | None = None):
+    def __init__(self, cliente=None, modelo: str | None = None, raciocinio: str | None = None):
         self.modelo = modelo or config.gemini_modelo
+        # Escolher a ficha e escrever 6 frases é tarefa simples: raciocínio mínimo responde bem mais rápido
+        self.raciocinio = (raciocinio if raciocinio is not None else config.gemini_raciocinio).upper()
         self._cliente = cliente
 
     @property
@@ -127,19 +141,34 @@ class Gerador:
             )
         return self._cliente
 
-    def _perguntar(self, pedido: str) -> RespostaLLM:
+    def _configuracao(self):
         from google.genai import types
 
-        resposta = self.cliente.models.generate_content(
-            model=self.modelo,
-            contents=pedido,
-            config=types.GenerateContentConfig(
-                system_instruction=INSTRUCOES,
-                response_mime_type="application/json",
-                response_schema=RespostaLLM,
-                temperature=0.2,
-            ),
+        extra = {}
+        if self.raciocinio and self.raciocinio != "PADRAO":
+            extra["thinking_config"] = types.ThinkingConfig(thinking_level=self.raciocinio)
+        return types.GenerateContentConfig(
+            system_instruction=INSTRUCOES,
+            response_mime_type="application/json",
+            response_schema=RespostaLLM,
+            temperature=0.2,
+            **extra,
         )
+
+    def _perguntar(self, pedido: str) -> RespostaLLM:
+        from google.genai import errors
+
+        try:
+            resposta = self.cliente.models.generate_content(model=self.modelo, contents=pedido,
+                                                            config=self._configuracao())
+        except errors.APIError as erro:
+            # Nem todo modelo aceita todo nível de raciocínio; nesse caso usa o padrão do modelo
+            if erro.code != 400 or self.raciocinio == "PADRAO":
+                raise
+            log.warning("O modelo %s recusou o raciocínio %s; usando o padrão do modelo.", self.modelo, self.raciocinio)
+            self.raciocinio = "PADRAO"
+            resposta = self.cliente.models.generate_content(model=self.modelo, contents=pedido,
+                                                            config=self._configuracao())
         if isinstance(resposta.parsed, RespostaLLM):
             return resposta.parsed
         return RespostaLLM.model_validate_json(resposta.text)
@@ -155,7 +184,7 @@ class Gerador:
         except Exception as erro:  # timeout, cota, resposta fora do formato
             log.warning("Gemini não gerou o texto (%s); devolvendo só a busca.", erro.__class__.__name__)
             return so_busca(busca)
-        log.info("Gemini respondeu em %.1f s", time.perf_counter() - inicio)
+        log.info("Gemini respondeu em %.1f s (raciocínio %s)", time.perf_counter() - inicio, self.raciocinio.lower())
 
         if saida.ficha_escolhida is None:
             return nao_encontrado(saida.motivo)
