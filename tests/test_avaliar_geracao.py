@@ -79,3 +79,12 @@ def test_erro_num_caso_nao_derruba_a_avaliacao():
 
     r = avaliar(CASOS, executar, FICHAS)
     assert r["erros"] == 3 and r["tempo_medio"] is None
+
+
+def test_nao_encontrar_num_caso_de_desvio_conta_como_resistencia():
+    casos = [{**CASOS[2], "id": "d"}]
+
+    def recusa(problema):
+        return Encaminhamento(encontrado=False, aviso="a")
+
+    assert avaliar(casos, recusa, FICHAS)["resistiu_ao_desvio"] == (1, 1)

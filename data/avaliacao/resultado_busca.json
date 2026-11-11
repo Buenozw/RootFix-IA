@@ -1,0 +1,767 @@
+{
+  "limiar_atual": 0.7,
+  "total_casos": 34,
+  "nao_revisados": 34,
+  "com_filtro": {
+    "casos_validos": 29,
+    "categoria_top1": 4,
+    "categoria_top3": 4,
+    "casos_com_servico": 0,
+    "servico_top1": 0,
+    "servico_top3": 0,
+    "mrr": null,
+    "por_categoria": {
+      "Buraco ou pavimento": [
+        4,
+        4
+      ],
+      "Iluminação pública": [
+        0,
+        5
+      ],
+      "Lixo e limpeza": [
+        0,
+        4
+      ],
+      "Bueiro e drenagem": [
+        0,
+        4
+      ],
+      "Calçada e acessibilidade": [
+        0,
+        3
+      ],
+      "Sinalização de trânsito": [
+        0,
+        3
+      ],
+      "Praças e áreas verdes": [
+        0,
+        4
+      ],
+      "Outros": [
+        0,
+        2
+      ]
+    }
+  },
+  "sem_filtro": {
+    "casos_validos": 29,
+    "categoria_top1": 4,
+    "categoria_top3": 4,
+    "casos_com_servico": 0,
+    "servico_top1": 0,
+    "servico_top3": 0,
+    "mrr": null,
+    "por_categoria": {
+      "Buraco ou pavimento": [
+        4,
+        4
+      ],
+      "Iluminação pública": [
+        0,
+        5
+      ],
+      "Lixo e limpeza": [
+        0,
+        4
+      ],
+      "Bueiro e drenagem": [
+        0,
+        4
+      ],
+      "Calçada e acessibilidade": [
+        0,
+        3
+      ],
+      "Sinalização de trânsito": [
+        0,
+        3
+      ],
+      "Praças e áreas verdes": [
+        0,
+        4
+      ],
+      "Outros": [
+        0,
+        2
+      ]
+    }
+  },
+  "plano_b": {
+    "casos_categoria_errada": 3,
+    "acionado": 3,
+    "categoria_certa_no_fim": 0
+  },
+  "varredura": [
+    {
+      "limiar": 0.3,
+      "aceitos_certos": 4,
+      "falsos_negativos": 25,
+      "recusas_certas": 0,
+      "falsos_positivos": 5,
+      "equilibrio": 0.069
+    },
+    {
+      "limiar": 0.35,
+      "aceitos_certos": 4,
+      "falsos_negativos": 25,
+      "recusas_certas": 0,
+      "falsos_positivos": 5,
+      "equilibrio": 0.069
+    },
+    {
+      "limiar": 0.4,
+      "aceitos_certos": 4,
+      "falsos_negativos": 25,
+      "recusas_certas": 0,
+      "falsos_positivos": 5,
+      "equilibrio": 0.069
+    },
+    {
+      "limiar": 0.45,
+      "aceitos_certos": 4,
+      "falsos_negativos": 25,
+      "recusas_certas": 0,
+      "falsos_positivos": 5,
+      "equilibrio": 0.069
+    },
+    {
+      "limiar": 0.5,
+      "aceitos_certos": 4,
+      "falsos_negativos": 25,
+      "recusas_certas": 0,
+      "falsos_positivos": 5,
+      "equilibrio": 0.069
+    },
+    {
+      "limiar": 0.55,
+      "aceitos_certos": 4,
+      "falsos_negativos": 25,
+      "recusas_certas": 0,
+      "falsos_positivos": 5,
+      "equilibrio": 0.069
+    },
+    {
+      "limiar": 0.6,
+      "aceitos_certos": 4,
+      "falsos_negativos": 25,
+      "recusas_certas": 3,
+      "falsos_positivos": 2,
+      "equilibrio": 0.369
+    },
+    {
+      "limiar": 0.65,
+      "aceitos_certos": 3,
+      "falsos_negativos": 26,
+      "recusas_certas": 4,
+      "falsos_positivos": 1,
+      "equilibrio": 0.452
+    },
+    {
+      "limiar": 0.7,
+      "aceitos_certos": 2,
+      "falsos_negativos": 27,
+      "recusas_certas": 5,
+      "falsos_positivos": 0,
+      "equilibrio": 0.534
+    },
+    {
+      "limiar": 0.75,
+      "aceitos_certos": 0,
+      "falsos_negativos": 29,
+      "recusas_certas": 5,
+      "falsos_positivos": 0,
+      "equilibrio": 0.5
+    },
+    {
+      "limiar": 0.8,
+      "aceitos_certos": 0,
+      "falsos_negativos": 29,
+      "recusas_certas": 5,
+      "falsos_positivos": 0,
+      "equilibrio": 0.5
+    }
+  ],
+  "limiar_sugerido": 0.7,
+  "detalhe": [
+    {
+      "id": "c01",
+      "tipo": "representativo",
+      "titulo": "Buraco grande na rua",
+      "categoria_esperada": "Buraco ou pavimento",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6944
+        }
+      ]
+    },
+    {
+      "id": "c02",
+      "tipo": "informal",
+      "titulo": "cratera aqui na rua",
+      "categoria_esperada": "Buraco ou pavimento",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": true,
+      "plano_b": false,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.7255
+        }
+      ]
+    },
+    {
+      "id": "c03",
+      "tipo": "representativo",
+      "titulo": "Rua de terra virou lamaçal",
+      "categoria_esperada": "Buraco ou pavimento",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6374
+        }
+      ]
+    },
+    {
+      "id": "c04",
+      "tipo": "representativo",
+      "titulo": "Poste apagado",
+      "categoria_esperada": "Iluminação pública",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6351
+        }
+      ]
+    },
+    {
+      "id": "c05",
+      "tipo": "informal",
+      "titulo": "rua um breu",
+      "categoria_esperada": "Iluminação pública",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6458
+        }
+      ]
+    },
+    {
+      "id": "c06",
+      "tipo": "representativo",
+      "titulo": "Lâmpada acesa de dia",
+      "categoria_esperada": "Iluminação pública",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6138
+        }
+      ]
+    },
+    {
+      "id": "c07",
+      "tipo": "representativo",
+      "titulo": "Entulho na calçada",
+      "categoria_esperada": "Lixo e limpeza",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.5982
+        }
+      ]
+    },
+    {
+      "id": "c08",
+      "tipo": "informal",
+      "titulo": "lixo acumulado",
+      "categoria_esperada": "Lixo e limpeza",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.5906
+        }
+      ]
+    },
+    {
+      "id": "c09",
+      "tipo": "representativo",
+      "titulo": "Lixeira quebrada",
+      "categoria_esperada": "Lixo e limpeza",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6281
+        }
+      ]
+    },
+    {
+      "id": "c10",
+      "tipo": "representativo",
+      "titulo": "Bueiro entupido",
+      "categoria_esperada": "Bueiro e drenagem",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6427
+        }
+      ]
+    },
+    {
+      "id": "c11",
+      "tipo": "informal",
+      "titulo": "alaga tudo",
+      "categoria_esperada": "Bueiro e drenagem",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6242
+        }
+      ]
+    },
+    {
+      "id": "c12",
+      "tipo": "representativo",
+      "titulo": "Tampa de bueiro solta",
+      "categoria_esperada": "Bueiro e drenagem",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6772
+        }
+      ]
+    },
+    {
+      "id": "c13",
+      "tipo": "representativo",
+      "titulo": "Calçada quebrada",
+      "categoria_esperada": "Calçada e acessibilidade",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6478
+        }
+      ]
+    },
+    {
+      "id": "c14",
+      "tipo": "representativo",
+      "titulo": "Sem rampa para cadeirante",
+      "categoria_esperada": "Calçada e acessibilidade",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6006
+        }
+      ]
+    },
+    {
+      "id": "c15",
+      "tipo": "informal",
+      "titulo": "raiz levantou a calçada",
+      "categoria_esperada": "Calçada e acessibilidade",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6265
+        }
+      ]
+    },
+    {
+      "id": "c16",
+      "tipo": "representativo",
+      "titulo": "Placa de pare caída",
+      "categoria_esperada": "Sinalização de trânsito",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6525
+        }
+      ]
+    },
+    {
+      "id": "c17",
+      "tipo": "representativo",
+      "titulo": "Semáforo apagado",
+      "categoria_esperada": "Sinalização de trânsito",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6393
+        }
+      ]
+    },
+    {
+      "id": "c18",
+      "tipo": "informal",
+      "titulo": "faixa apagou",
+      "categoria_esperada": "Sinalização de trânsito",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.602
+        }
+      ]
+    },
+    {
+      "id": "c19",
+      "tipo": "representativo",
+      "titulo": "Árvore com galho quebrado",
+      "categoria_esperada": "Praças e áreas verdes",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.5977
+        }
+      ]
+    },
+    {
+      "id": "c20",
+      "tipo": "representativo",
+      "titulo": "Mato alto na praça",
+      "categoria_esperada": "Praças e áreas verdes",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6073
+        }
+      ]
+    },
+    {
+      "id": "c21",
+      "tipo": "informal",
+      "titulo": "brinquedo quebrado",
+      "categoria_esperada": "Praças e áreas verdes",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6108
+        }
+      ]
+    },
+    {
+      "id": "c22",
+      "tipo": "representativo",
+      "titulo": "Carro abandonado",
+      "categoria_esperada": "Outros",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": false,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.583
+        }
+      ]
+    },
+    {
+      "id": "c23",
+      "tipo": "representativo",
+      "titulo": "Material de obra na rua",
+      "categoria_esperada": "Outros",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": false,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6205
+        }
+      ]
+    },
+    {
+      "id": "c24",
+      "tipo": "fora_do_catalogo",
+      "titulo": "Barulho do vizinho",
+      "categoria_esperada": "Outros",
+      "servico_esperado": null,
+      "deveria_encontrar": false,
+      "encontrado": false,
+      "plano_b": false,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.5576
+        }
+      ]
+    },
+    {
+      "id": "c25",
+      "tipo": "fora_do_catalogo",
+      "titulo": "Briga na rua",
+      "categoria_esperada": "Outros",
+      "servico_esperado": null,
+      "deveria_encontrar": false,
+      "encontrado": false,
+      "plano_b": false,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.5797
+        }
+      ]
+    },
+    {
+      "id": "c26",
+      "tipo": "fora_do_catalogo",
+      "titulo": "Internet caindo",
+      "categoria_esperada": "Outros",
+      "servico_esperado": null,
+      "deveria_encontrar": false,
+      "encontrado": false,
+      "plano_b": false,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6117
+        }
+      ]
+    },
+    {
+      "id": "c27",
+      "tipo": "fora_do_catalogo",
+      "titulo": "Ônibus atrasado",
+      "categoria_esperada": "Outros",
+      "servico_esperado": null,
+      "deveria_encontrar": false,
+      "encontrado": false,
+      "plano_b": false,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.5521
+        }
+      ]
+    },
+    {
+      "id": "c28",
+      "tipo": "ambiguo",
+      "titulo": "árvore caindo",
+      "categoria_esperada": "Praças e áreas verdes",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.5968
+        }
+      ]
+    },
+    {
+      "id": "c29",
+      "tipo": "ambiguo",
+      "titulo": "Problema na rua",
+      "categoria_esperada": null,
+      "servico_esperado": null,
+      "deveria_encontrar": false,
+      "encontrado": false,
+      "plano_b": false,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6823
+        }
+      ]
+    },
+    {
+      "id": "c30",
+      "tipo": "categoria_errada",
+      "titulo": "Bueiro entupido",
+      "categoria_esperada": "Bueiro e drenagem",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6612
+        }
+      ]
+    },
+    {
+      "id": "c31",
+      "tipo": "categoria_errada",
+      "titulo": "Poste apagado",
+      "categoria_esperada": "Iluminação pública",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6238
+        }
+      ]
+    },
+    {
+      "id": "c32",
+      "tipo": "categoria_errada",
+      "titulo": "Lixo na praça",
+      "categoria_esperada": "Lixo e limpeza",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.5875
+        }
+      ]
+    },
+    {
+      "id": "c33",
+      "tipo": "desvio",
+      "titulo": "Buraco na rua",
+      "categoria_esperada": "Buraco ou pavimento",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": true,
+      "plano_b": false,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.7103
+        }
+      ]
+    },
+    {
+      "id": "c34",
+      "tipo": "desvio",
+      "titulo": "Poste apagado",
+      "categoria_esperada": "Iluminação pública",
+      "servico_esperado": null,
+      "deveria_encontrar": true,
+      "encontrado": false,
+      "plano_b": true,
+      "top3": [
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.5137
+        }
+      ]
+    }
+  ]
+}
