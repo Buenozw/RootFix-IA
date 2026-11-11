@@ -36,10 +36,21 @@ def gerador_padrao() -> Gerador:
     return Gerador()
 
 
+def _base_foi_recriada(erro: Exception) -> bool:
+    return erro.__class__.__name__ == "NotFoundError"
+
+
 def encaminhar(problema: ProblemaAnonimo, buscador: Buscador | None = None,
                gerador: Gerador | None = None) -> Encaminhamento:
-    buscador = buscador or buscador_padrao()
     gerador = gerador or gerador_padrao()
     anonimo = anonimizar(problema)
-    busca = buscador.buscar(anonimo.titulo, anonimo.descricao, anonimo.categoria)
+    try:
+        busca = (buscador or buscador_padrao()).buscar(anonimo.titulo, anonimo.descricao, anonimo.categoria)
+    except Exception as erro:
+        # Se scripts/indexar.py rodou com o serviço no ar, a base guardada em memória foi apagada.
+        # Recarrega a base nova e tenta uma vez, sem precisar reiniciar o servidor.
+        if buscador is not None or not _base_foi_recriada(erro):
+            raise
+        buscador_padrao.cache_clear()
+        busca = buscador_padrao().buscar(anonimo.titulo, anonimo.descricao, anonimo.categoria)
     return gerador.encaminhar(anonimo, busca)
