@@ -1,0 +1,34 @@
+# Deploy do serviço de IA no Render (plano gratuito). Passo a passo em docs/deploy.md.
+# Não coloque segredos aqui: os valores com sync: false são preenchidos no painel do Render.
+services:
+  - type: web
+    name: rootfix-ia
+    runtime: python
+    plan: free
+    # A versão do Python vem do arquivo .python-version (3.13)
+    buildCommand: pip install -r requirements.txt
+    # A base vetorial já vem pronta no repositório (data/vetores): o build não chama a API do Gemini
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODELO
+        value: gemini-3.5-flash
+      - key: GEMINI_RACIOCINIO
+        value: minimal
+      - key: EMBEDDINGS_PROVEDOR
+        value: gemini
+      - key: EMBEDDINGS_DIMENSOES
+        value: "768"
+      - key: JAVA_API_URL
+        value: https://rootfix-java.onrender.com
+      - key: LIMIAR_SIMILARIDADE
+        sync: false
+      - key: TIMEOUT_JAVA_SEGUNDOS
+        value: "75"
+      - key: TIMEOUT_GEMINI_SEGUNDOS
+        value: "30"
+      - key: CORS_ORIGENS
+        value: "*"

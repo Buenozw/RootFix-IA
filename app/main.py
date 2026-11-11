@@ -1,10 +1,12 @@
 """Serviço de IA do RootFix: Encaminhador do gestor."""
 
 import logging
+import os
 import time
 from collections import defaultdict, deque
 
 from fastapi import FastAPI, Header, HTTPException, Path, Request
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.busca import BaseIncompativel
 from app.cliente_java import ErroJava, JavaIndisponivel, cliente_padrao, para_problema_anonimo
@@ -21,6 +23,15 @@ app = FastAPI(
     description="Diz ao gestor qual serviço da prefeitura resolve um problema adotado e escreve a solicitação, "
     "com base em fichas públicas do SP156 (RAG) e no Gemini.",
     version="0.3.0",
+)
+
+# O app em React Native não precisa de CORS, mas o Expo Web e o Swagger em outro domínio precisam.
+# Não há cookie nem sessão (o token vai no cabeçalho), então liberar origens não expõe credenciais.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in os.getenv("CORS_ORIGENS", "*").split(",") if o.strip()],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 # Limite simples para o /simular, que não exige login: protege a cota gratuita do Gemini
