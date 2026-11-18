@@ -22,7 +22,8 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ))
 
-from app.busca import Buscador, ResultadoBusca  # noqa: E402
+from app.busca import Buscador, ResultadoBusca, texto_da_consulta  # noqa: E402
+from app.embeddings import EmbedderComCache  # noqa: E402
 from app.fichas import CATEGORIAS  # noqa: E402
 
 CASOS = RAIZ / "data" / "avaliacao" / "casos.jsonl"
@@ -112,6 +113,10 @@ def varrer_limiares(casos: list[dict], buscar_com_limiar) -> list[dict]:
 
 
 def avaliar(casos: list[dict], buscador: Buscador) -> dict:
+    # Os 34 textos viram vetores numa chamada só; as dezenas de buscas seguintes reaproveitam
+    if not isinstance(buscador.embedder, EmbedderComCache):
+        buscador.embedder = EmbedderComCache(buscador.embedder)
+    buscador.embedder.preparar([texto_da_consulta(c["titulo"], c["descricao"]) for c in casos])
     memo: dict[tuple, ResultadoBusca] = {}
 
     def buscar(caso: dict, usar_filtro: bool = True, limiar: float | None = None) -> ResultadoBusca:

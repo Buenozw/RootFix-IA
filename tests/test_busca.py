@@ -133,3 +133,15 @@ def test_relatorio_substitui_so_a_secao_da_busca(tmp_path):
     assert texto.count(INICIO) == 1 and texto.count(FIM) == 1
     assert "Texto escrito à mão." in texto
     assert "provisórios" in texto  # avisa que há rótulo não revisado
+
+
+def test_avaliacao_pede_os_embeddings_numa_chamada_so(tmp_path):
+    chamadas = []
+
+    def contador(textos):
+        chamadas.append(len(textos))
+        return embedder_palavras(textos)
+
+    avaliar(CASOS, Buscador(contador, montar_base(tmp_path), limiar=0.5))
+    # uma chamada com os 3 textos, apesar de cada caso ser buscado 13 vezes (com/sem filtro + 11 limiares)
+    assert chamadas == [3]

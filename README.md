@@ -14,6 +14,9 @@ Grupo **Rooted**
 
 Vídeo de demonstração: _link a preencher_
 
+**Serviço no ar:** https://rootfix-ia.onrender.com · documentação interativa em [/docs](https://rootfix-ia.onrender.com/docs) · estado em [/health](https://rootfix-ia.onrender.com/health)
+**No app:** botão "Encaminhar com IA" no [app mobile do RootFix](https://github.com/Felipe-Furlanetto0504/GS-Mobile-Quarto-Semestre)
+
 ---
 
 ## A funcionalidade
@@ -38,7 +41,7 @@ O **Encaminhador do gestor** resolve essa etapa. Quando o gestor toca em "Encami
 | Requisito | Onde está |
 |---|---|
 | 01 · Aplicação ao problema | Esta seção; público e contribuição acima |
-| 02 · IA generativa no fluxo | Gemini escreve a solicitação e o resumo dentro do `POST /encaminhar/{id}`, chamado pelo app ([gerador.py](app/gerador.py)) |
+| 02 · IA generativa no fluxo | Gemini escreve a solicitação e o resumo dentro do `POST /encaminhar/{id}` ([gerador.py](app/gerador.py)), publicado no Render e chamado pela tela de encaminhamento do app ([No app](#no-app)) |
 | 03 · Aprofundamento técnico | RAG básico sobre fichas oficiais do SP156: embeddings, base vetorial, busca filtrada por categoria e limiar ([busca.py](app/busca.py)); justificativa abaixo |
 | 04 · Dados e arquitetura | [docs/dados.md](docs/dados.md) (fontes e preparação) e [docs/arquitetura.md](docs/arquitetura.md) (fluxo e decisões) |
 | 05 · Avaliação dos resultados | [docs/avaliacao.md](docs/avaliacao.md): casos rotulados, métricas de busca e de geração, casos de falha e testes de integração |
@@ -64,6 +67,17 @@ flowchart LR
 6. **Serviço, órgão, canal, prazo e fonte saem da ficha escolhida, nunca do modelo.**
 
 Detalhes, diagrama de sequência e decisões: [docs/arquitetura.md](docs/arquitetura.md).
+
+## No app
+
+O encaminhamento está ligado ao app mobile do RootFix ([GS-Mobile-Quarto-Semestre](https://github.com/Felipe-Furlanetto0504/GS-Mobile-Quarto-Semestre)):
+
+- Na tela do problema, depois de adotar, o gestor vê o card **Encaminhar à prefeitura** (`src/features/encaminhamento/components/CardEncaminhar.js`).
+- O toque abre a tela **Encaminhamento** (`app/problema/encaminhamento.js`), que chama `POST /encaminhar/{id}` com o token do gestor e mostra o serviço, o órgão, onde pedir, o que informar, o texto com o botão **Copiar texto**, o resumo dos vizinhos, o link da fonte e o aviso.
+- O resultado fica em cache enquanto o app está aberto, para não chamar o Gemini de novo ao voltar à tela.
+- O app espera até 2 minutos, porque o serviço de IA e a API Java podem estar acordando no plano gratuito do Render.
+
+O formato de cada resposta e o que o app faz com cada erro estão em [docs/contrato-app.md](docs/contrato-app.md).
 
 ## Modelos e por que foram escolhidos
 
@@ -127,7 +141,7 @@ python scripts/avaliar_busca.py    # métricas da busca e sugestão de limiar
 python scripts/avaliar_geracao.py  # métricas do encaminhamento completo
 ```
 
-Deploy no Render: [docs/deploy.md](docs/deploy.md). Integração com o app: [docs/contrato-app.md](docs/contrato-app.md).
+Deploy no Render (publicado em https://rootfix-ia.onrender.com): [docs/deploy.md](docs/deploy.md). Integração com o app: [docs/contrato-app.md](docs/contrato-app.md).
 
 ## Resultados
 
@@ -135,11 +149,13 @@ Resumo; números completos e análise em [docs/avaliacao.md](docs/avaliacao.md).
 
 | O que | Resultado |
 |---|---|
-| Testes automatizados | 92 testes, 92% de cobertura do código do serviço (Windows) |
+| Testes automatizados | 94 testes; cobertura de 92% do código do serviço (medida no Windows em 10/11) |
 | Memória no deploy | Pico de 111 MB com embeddings do Gemini, contra o limite de 512 MB (modelo local: 773 MB) |
 | Integração real com a API Java | Problema 2 (buraco na Bela Vista) com só a ficha do Ipiranga na base: o Gemini **recusou** a ficha, porque ela vale para outra subprefeitura. Recusa correta: aceitar mandaria o gestor cobrar o órgão errado |
-| Busca (acerto, MRR, limiar) | _a preencher depois da coleta das fichas_ |
-| Geração (fonte citada, recusas, desvio de instrução, invenção) | _a preencher depois da coleta das fichas_ |
+| Encaminhamento completo (`/simular`) | Buraco no Ipiranga: serviço, órgão e canal vindos da ficha, prazo vazio porque a página não informa, texto gerado sem dados pessoais. Defeito pequeno: o texto pôs "veículos" no plural quando o relato falava de um carro |
+| Falha encontrada e corrigida | Com o Gemini fora do ar, o plano B repassou o órgão de uma ficha de outra subprefeitura; agora ele deixa o órgão de fora e avisa para conferir |
+| Busca, rodada com 1 ficha | A categoria certa ficou em 1º nos 4 de 4 casos possíveis (os buracos). Mostrou que a escala do `gemini-embedding-001` é comprimida: casos sem relação também pontuam alto, então o limiar sozinho não separa, e o Gemini faz a segunda barreira. Leitura completa em [docs/avaliacao.md](docs/avaliacao.md#leitura-da-rodada-de-1011-base-com-1-ficha) |
+| Busca e geração com a base completa | _próxima rodada, depois da coleta das fichas_ |
 
 ## Limitações
 

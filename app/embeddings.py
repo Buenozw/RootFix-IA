@@ -49,6 +49,28 @@ def _normalizar(vetor: list[float]) -> list[float]:
     return [v / norma for v in vetor]
 
 
+class EmbedderComCache:
+    """Guarda o vetor de cada texto já visto, para não pedir o mesmo embedding duas vezes.
+
+    A avaliação busca o mesmo caso várias vezes (com e sem filtro, e com cada limiar testado).
+    Sem cache, cada busca virava uma chamada à API e estourava a cota gratuita (erro 429).
+    """
+
+    def __init__(self, embedder: Embedder):
+        self.embedder = embedder
+        self._vetores: dict[str, list[float]] = {}
+
+    def preparar(self, textos: list[str]) -> None:
+        """Gera de uma vez, numa chamada só, os vetores dos textos que ainda não estão no cache."""
+        faltam = list(dict.fromkeys(t for t in textos if t not in self._vetores))
+        if faltam:
+            self._vetores.update(zip(faltam, self.embedder(faltam)))
+
+    def __call__(self, textos: list[str]) -> list[list[float]]:
+        self.preparar(textos)
+        return [self._vetores[t] for t in textos]
+
+
 class EmbedderGemini:
     """Chama o gemini-embedding-001. `tarefa` diz ao modelo se o texto é ficha ou pergunta."""
 

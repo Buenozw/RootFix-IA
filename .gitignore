@@ -6,6 +6,8 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+.coverage
+htmlcov/
 
 # A base vetorial (data/vetores/) VAI para o Git: ela é criada uma vez na máquina, com os
 # embeddings do Gemini, para o Render não gastar cota da API a cada deploy. Recrie e faça

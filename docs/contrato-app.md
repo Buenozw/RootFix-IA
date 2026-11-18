@@ -4,7 +4,8 @@ Tudo que o app RootFix precisa para usar o Encaminhador do gestor.
 
 ## Onde
 
-- **Endereço:** `https://<nome-do-serviço>.onrender.com` (definido no deploy; ver [deploy.md](deploy.md)).
+- **Endereço:** `https://rootfix-ia.onrender.com` (ver [deploy.md](deploy.md)).
+- **Implementado no app:** repositório [GS-Mobile-Quarto-Semestre](https://github.com/Felipe-Furlanetto0504/GS-Mobile-Quarto-Semestre), pasta `src/features/encaminhamento` e tela `app/problema/encaminhamento.js`. O endereço fica em `src/config.js` (`IA_URL`).
 - **Documentação interativa:** `/docs` no mesmo endereço.
 
 ## Quando mostrar o botão "Encaminhar com IA"
@@ -30,7 +31,7 @@ Sem corpo. O serviço lê o problema e as observações na API Java com esse tok
 Exemplo em React Native:
 
 ```js
-const URL_IA = "https://<nome-do-serviço>.onrender.com";
+const URL_IA = "https://rootfix-ia.onrender.com";
 
 export async function encaminharComIA(problemaId, token) {
   const controle = new AbortController();

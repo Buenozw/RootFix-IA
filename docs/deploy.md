@@ -2,6 +2,21 @@
 
 O serviço roda no plano gratuito do Render, no mesmo esquema da API Java: dorme depois de 15 minutos sem uso e leva cerca de 1 minuto para acordar.
 
+**Publicado em:** https://rootfix-ia.onrender.com (desde 17/11/2026) · documentação interativa em https://rootfix-ia.onrender.com/docs
+
+### Como foi publicado
+
+Como Web Service a partir do repositório público, sem Blueprint:
+
+1. **New → Web Service → Public Git Repository**, com `https://github.com/Buenozw/RootFix-IA`.
+2. Runtime **Python 3**, branch `main`, plano **Free**.
+3. *Build Command* `pip install -r requirements.txt` e *Start Command* `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
+4. Variáveis `GEMINI_API_KEY` e `LIMIAR_SIMILARIDADE=0.5`; as outras usam o padrão do código, que é igual ao do `render.yaml`.
+
+Por ser um repositório público, o Render não publica sozinho a cada push: depois de reindexar as fichas, use **Manual Deploy → Deploy latest commit**.
+
+As seções abaixo descrevem o caminho pelo `render.yaml` (Blueprint), que também funciona.
+
 ## Antes de subir
 
 1. **Base indexada e no Git.** Rode `python scripts/indexar.py` com as fichas finais e faça commit de `data/vetores/` e `data/processado/`. O Render usa essa base pronta e não chama a API de embeddings no build.
@@ -20,7 +35,7 @@ Se preferir sem Blueprint: **New → Web Service**, mesmo repositório, *Build C
 
 ## Conferindo
 
-Abra `https://<nome-do-serviço>.onrender.com/health`. O deploy está certo quando aparecer:
+Abra `https://rootfix-ia.onrender.com/health`. O deploy está certo quando aparecer:
 
 ```json
 "baseIndexada": true,
@@ -31,7 +46,7 @@ Abra `https://<nome-do-serviço>.onrender.com/health`. O deploy está certo quan
 Depois teste o encaminhamento de verdade apontando o script para o endereço do Render:
 
 ```bash
-python scripts/testar_integracao.py --problema <id> --servico https://<nome-do-serviço>.onrender.com
+python scripts/testar_integracao.py --problema <id> --servico https://rootfix-ia.onrender.com
 ```
 
 ## Versão do Python

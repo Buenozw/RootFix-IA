@@ -4,7 +4,11 @@
 
 As fichas de serviço vêm de páginas públicas da Prefeitura de São Paulo: o Quadro ou Carta de Serviços das subprefeituras, as páginas do SP156 ligadas a eles e páginas de "como solicitar" das subprefeituras. Cada ficha guarda a URL de origem e a data em que foi copiada. O passo a passo da coleta está em [coleta-de-fichas.md](coleta-de-fichas.md).
 
-> A tabela com cada ficha, a URL e a data de coleta entra aqui quando a coleta terminar.
+| Ficha | Serviço | Categoria | Fonte | Coleta |
+|---|---|---|---|---|
+| `tapa-buraco-ipiranga.md` | Tapa-buraco | Buraco ou pavimento | [Subprefeitura Ipiranga](https://prefeitura.sp.gov.br/web/ipiranga/w/opera%C3%A7%C3%A3o-tapa-buraco-no-ipiranga-saiba-como-solicitar-o-servi%C3%A7o) | 10/11/2026 |
+
+> Coleta em andamento: a meta é de 30 fichas, pelo menos 3 por categoria. Cada ficha nova entra nesta tabela.
 
 ## Preparação
 
