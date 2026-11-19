@@ -1,11 +1,11 @@
 {
-  "limiar_atual": 0.7,
+  "limiar_atual": 0.5,
   "total_casos": 34,
   "nao_revisados": 34,
   "com_filtro": {
     "casos_validos": 29,
-    "categoria_top1": 4,
-    "categoria_top3": 4,
+    "categoria_top1": 25,
+    "categoria_top3": 26,
     "casos_com_servico": 0,
     "servico_top1": 0,
     "servico_top3": 0,
@@ -16,163 +16,163 @@
         4
       ],
       "Iluminação pública": [
-        0,
+        4,
         5
       ],
       "Lixo e limpeza": [
-        0,
+        3,
         4
       ],
       "Bueiro e drenagem": [
-        0,
+        3,
         4
       ],
       "Calçada e acessibilidade": [
-        0,
+        3,
         3
       ],
       "Sinalização de trânsito": [
-        0,
+        3,
         3
       ],
       "Praças e áreas verdes": [
-        0,
+        4,
         4
       ],
       "Outros": [
-        0,
+        1,
         2
       ]
     }
   },
   "sem_filtro": {
     "casos_validos": 29,
-    "categoria_top1": 4,
-    "categoria_top3": 4,
+    "categoria_top1": 26,
+    "categoria_top3": 29,
     "casos_com_servico": 0,
     "servico_top1": 0,
     "servico_top3": 0,
     "mrr": null,
     "por_categoria": {
       "Buraco ou pavimento": [
-        4,
+        3,
         4
       ],
       "Iluminação pública": [
-        0,
+        5,
         5
       ],
       "Lixo e limpeza": [
-        0,
+        4,
         4
       ],
       "Bueiro e drenagem": [
-        0,
+        4,
         4
       ],
       "Calçada e acessibilidade": [
-        0,
+        3,
         3
       ],
       "Sinalização de trânsito": [
-        0,
+        3,
         3
       ],
       "Praças e áreas verdes": [
-        0,
+        3,
         4
       ],
       "Outros": [
-        0,
+        1,
         2
       ]
     }
   },
   "plano_b": {
     "casos_categoria_errada": 3,
-    "acionado": 3,
+    "acionado": 0,
     "categoria_certa_no_fim": 0
   },
   "varredura": [
     {
       "limiar": 0.3,
-      "aceitos_certos": 4,
-      "falsos_negativos": 25,
+      "aceitos_certos": 25,
+      "falsos_negativos": 4,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.069
+      "equilibrio": 0.431
     },
     {
       "limiar": 0.35,
-      "aceitos_certos": 4,
-      "falsos_negativos": 25,
+      "aceitos_certos": 25,
+      "falsos_negativos": 4,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.069
+      "equilibrio": 0.431
     },
     {
       "limiar": 0.4,
-      "aceitos_certos": 4,
-      "falsos_negativos": 25,
+      "aceitos_certos": 25,
+      "falsos_negativos": 4,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.069
+      "equilibrio": 0.431
     },
     {
       "limiar": 0.45,
-      "aceitos_certos": 4,
-      "falsos_negativos": 25,
+      "aceitos_certos": 25,
+      "falsos_negativos": 4,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.069
+      "equilibrio": 0.431
     },
     {
       "limiar": 0.5,
-      "aceitos_certos": 4,
-      "falsos_negativos": 25,
+      "aceitos_certos": 25,
+      "falsos_negativos": 4,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.069
+      "equilibrio": 0.431
     },
     {
       "limiar": 0.55,
-      "aceitos_certos": 4,
-      "falsos_negativos": 25,
+      "aceitos_certos": 25,
+      "falsos_negativos": 4,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.069
+      "equilibrio": 0.431
     },
     {
       "limiar": 0.6,
-      "aceitos_certos": 4,
-      "falsos_negativos": 25,
-      "recusas_certas": 3,
-      "falsos_positivos": 2,
-      "equilibrio": 0.369
+      "aceitos_certos": 24,
+      "falsos_negativos": 5,
+      "recusas_certas": 0,
+      "falsos_positivos": 5,
+      "equilibrio": 0.414
     },
     {
       "limiar": 0.65,
-      "aceitos_certos": 3,
-      "falsos_negativos": 26,
+      "aceitos_certos": 23,
+      "falsos_negativos": 6,
       "recusas_certas": 4,
       "falsos_positivos": 1,
-      "equilibrio": 0.452
+      "equilibrio": 0.797
     },
     {
       "limiar": 0.7,
-      "aceitos_certos": 2,
-      "falsos_negativos": 27,
-      "recusas_certas": 5,
-      "falsos_positivos": 0,
-      "equilibrio": 0.534
+      "aceitos_certos": 19,
+      "falsos_negativos": 10,
+      "recusas_certas": 4,
+      "falsos_positivos": 1,
+      "equilibrio": 0.728
     },
     {
       "limiar": 0.75,
-      "aceitos_certos": 0,
-      "falsos_negativos": 29,
+      "aceitos_certos": 10,
+      "falsos_negativos": 19,
       "recusas_certas": 5,
       "falsos_positivos": 0,
-      "equilibrio": 0.5
+      "equilibrio": 0.672
     },
     {
       "limiar": 0.8,
@@ -183,7 +183,7 @@
       "equilibrio": 0.5
     }
   ],
-  "limiar_sugerido": 0.7,
+  "limiar_sugerido": 0.65,
   "detalhe": [
     {
       "id": "c01",
@@ -192,8 +192,8 @@
       "categoria_esperada": "Buraco ou pavimento",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
           "servico": "Tapa-buraco",
@@ -226,8 +226,8 @@
       "categoria_esperada": "Buraco ou pavimento",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
           "servico": "Tapa-buraco",
@@ -243,13 +243,13 @@
       "categoria_esperada": "Iluminação pública",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6351
+          "servico": "Serviços de Iluminação Pública",
+          "categoria": "Iluminação pública",
+          "similaridade": 0.7614
         }
       ]
     },
@@ -260,13 +260,13 @@
       "categoria_esperada": "Iluminação pública",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6458
+          "servico": "Serviços de Iluminação Pública",
+          "categoria": "Iluminação pública",
+          "similaridade": 0.7519
         }
       ]
     },
@@ -277,13 +277,13 @@
       "categoria_esperada": "Iluminação pública",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6138
+          "servico": "Serviços de Iluminação Pública",
+          "categoria": "Iluminação pública",
+          "similaridade": 0.7389
         }
       ]
     },
@@ -294,13 +294,13 @@
       "categoria_esperada": "Lixo e limpeza",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.5982
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.7547
         }
       ]
     },
@@ -311,13 +311,13 @@
       "categoria_esperada": "Lixo e limpeza",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.5906
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.765
         }
       ]
     },
@@ -328,13 +328,13 @@
       "categoria_esperada": "Lixo e limpeza",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6281
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.7148
         }
       ]
     },
@@ -345,13 +345,13 @@
       "categoria_esperada": "Bueiro e drenagem",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6427
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.7698
         }
       ]
     },
@@ -362,13 +362,13 @@
       "categoria_esperada": "Bueiro e drenagem",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6242
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.7506
         }
       ]
     },
@@ -379,13 +379,13 @@
       "categoria_esperada": "Bueiro e drenagem",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6772
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.7045
         }
       ]
     },
@@ -396,13 +396,13 @@
       "categoria_esperada": "Calçada e acessibilidade",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6478
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.7565
         }
       ]
     },
@@ -413,13 +413,13 @@
       "categoria_esperada": "Calçada e acessibilidade",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6006
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.693
         }
       ]
     },
@@ -430,13 +430,13 @@
       "categoria_esperada": "Calçada e acessibilidade",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6265
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.7181
         }
       ]
     },
@@ -447,13 +447,13 @@
       "categoria_esperada": "Sinalização de trânsito",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6525
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.7228
         }
       ]
     },
@@ -464,13 +464,13 @@
       "categoria_esperada": "Sinalização de trânsito",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6393
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.7423
         }
       ]
     },
@@ -481,13 +481,13 @@
       "categoria_esperada": "Sinalização de trânsito",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.602
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.691
         }
       ]
     },
@@ -498,13 +498,13 @@
       "categoria_esperada": "Praças e áreas verdes",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.5977
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.7199
         }
       ]
     },
@@ -515,13 +515,13 @@
       "categoria_esperada": "Praças e áreas verdes",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6073
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.6965
         }
       ]
     },
@@ -532,13 +532,13 @@
       "categoria_esperada": "Praças e áreas verdes",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6108
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.6454
         }
       ]
     },
@@ -549,13 +549,23 @@
       "categoria_esperada": "Outros",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
+      "encontrado": true,
       "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.583
+          "servico": "Fiscalização de veículos em situação de abandono",
+          "categoria": "Outros",
+          "similaridade": 0.7731
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6961
+        },
+        {
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.6235
         }
       ]
     },
@@ -566,13 +576,23 @@
       "categoria_esperada": "Outros",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
+      "encontrado": true,
       "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6205
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6993
+        },
+        {
+          "servico": "Fiscalização de veículos em situação de abandono",
+          "categoria": "Outros",
+          "similaridade": 0.6444
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6423
         }
       ]
     },
@@ -583,13 +603,23 @@
       "categoria_esperada": "Outros",
       "servico_esperado": null,
       "deveria_encontrar": false,
-      "encontrado": false,
+      "encontrado": true,
       "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.5576
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6115
+        },
+        {
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.5741
+        },
+        {
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.5713
         }
       ]
     },
@@ -600,13 +630,23 @@
       "categoria_esperada": "Outros",
       "servico_esperado": null,
       "deveria_encontrar": false,
-      "encontrado": false,
+      "encontrado": true,
       "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.5797
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6302
+        },
+        {
+          "servico": "Serviços de Iluminação Pública",
+          "categoria": "Iluminação pública",
+          "similaridade": 0.6063
+        },
+        {
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.6008
         }
       ]
     },
@@ -617,13 +657,23 @@
       "categoria_esperada": "Outros",
       "servico_esperado": null,
       "deveria_encontrar": false,
-      "encontrado": false,
+      "encontrado": true,
       "plano_b": false,
       "top3": [
+        {
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.6144
+        },
         {
           "servico": "Tapa-buraco",
           "categoria": "Buraco ou pavimento",
           "similaridade": 0.6117
+        },
+        {
+          "servico": "Serviços de Iluminação Pública",
+          "categoria": "Iluminação pública",
+          "similaridade": 0.6097
         }
       ]
     },
@@ -634,13 +684,23 @@
       "categoria_esperada": "Outros",
       "servico_esperado": null,
       "deveria_encontrar": false,
-      "encontrado": false,
+      "encontrado": true,
       "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.5521
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.6006
+        },
+        {
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.5981
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.5845
         }
       ]
     },
@@ -651,13 +711,13 @@
       "categoria_esperada": "Praças e áreas verdes",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.5968
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.6837
         }
       ]
     },
@@ -668,13 +728,23 @@
       "categoria_esperada": null,
       "servico_esperado": null,
       "deveria_encontrar": false,
-      "encontrado": false,
+      "encontrado": true,
       "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6823
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.7173
+        },
+        {
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.7116
+        },
+        {
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.7079
         }
       ]
     },
@@ -685,8 +755,8 @@
       "categoria_esperada": "Bueiro e drenagem",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
           "servico": "Tapa-buraco",
@@ -702,13 +772,13 @@
       "categoria_esperada": "Iluminação pública",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.6238
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.7037
         }
       ]
     },
@@ -719,13 +789,13 @@
       "categoria_esperada": "Lixo e limpeza",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.5875
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.6458
         }
       ]
     },
@@ -753,13 +823,13 @@
       "categoria_esperada": "Iluminação pública",
       "servico_esperado": null,
       "deveria_encontrar": true,
-      "encontrado": false,
-      "plano_b": true,
+      "encontrado": true,
+      "plano_b": false,
       "top3": [
         {
-          "servico": "Tapa-buraco",
-          "categoria": "Buraco ou pavimento",
-          "similaridade": 0.5137
+          "servico": "Serviços de Iluminação Pública",
+          "categoria": "Iluminação pública",
+          "similaridade": 0.5868
         }
       ]
     }

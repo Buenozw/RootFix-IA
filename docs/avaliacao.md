@@ -86,12 +86,12 @@ As seções geradas abaixo são de uma rodada feita **com uma ficha só na base*
 
 > O acerto por **serviço** e o MRR aparecem depois que `servico_esperado` for preenchido nos casos, com o nome exato do serviço da ficha.
 
-34 casos, 29 com serviço esperado na base. Limiar usado: 0.70.
+34 casos, 29 com serviço esperado na base. Limiar usado: 0.50.
 
 | Métrica | Com filtro por categoria | Sem filtro |
 |---|---|---|
-| Categoria certa em 1º | 14% | 14% |
-| Categoria certa no top-3 | 14% | 14% |
+| Categoria certa em 1º | 86% | 90% |
+| Categoria certa no top-3 | 90% | 100% |
 | Serviço certo em 1º | — | — |
 | Serviço certo no top-3 | — | — |
 | MRR do serviço | — | — |
@@ -101,32 +101,32 @@ As seções geradas abaixo são de uma rodada feita **com uma ficha só na base*
 | Categoria | Acertos | Casos |
 |---|---|---|
 | Buraco ou pavimento | 4 | 4 |
-| Iluminação pública | 0 | 5 |
-| Lixo e limpeza | 0 | 4 |
-| Bueiro e drenagem | 0 | 4 |
-| Calçada e acessibilidade | 0 | 3 |
-| Sinalização de trânsito | 0 | 3 |
-| Praças e áreas verdes | 0 | 4 |
-| Outros | 0 | 2 |
+| Iluminação pública | 4 | 5 |
+| Lixo e limpeza | 3 | 4 |
+| Bueiro e drenagem | 3 | 4 |
+| Calçada e acessibilidade | 3 | 3 |
+| Sinalização de trânsito | 3 | 3 |
+| Praças e áreas verdes | 4 | 4 |
+| Outros | 1 | 2 |
 
 ### Quando o Spring AI erra a categoria
 
-Em 3 casos com a categoria errada de propósito, a busca filtrada ficou abaixo do limiar e caiu no plano B (base toda) em 3; a categoria certa terminou em 1º em 0.
+Em 3 casos com a categoria errada de propósito, a busca filtrada ficou abaixo do limiar e caiu no plano B (base toda) em 0; a categoria certa terminou em 1º em 0.
 
 ### Escolha do limiar de "não encontrei"
 
 | Limiar | Aceitos certos | Falsos negativos | Recusas certas | Falsos positivos | Equilíbrio |
 |---|---|---|---|---|---|
-| 0.30 | 4 | 25 | 0 | 5 | 0.07 |
-| 0.35 | 4 | 25 | 0 | 5 | 0.07 |
-| 0.40 | 4 | 25 | 0 | 5 | 0.07 |
-| 0.45 | 4 | 25 | 0 | 5 | 0.07 |
-| 0.50 | 4 | 25 | 0 | 5 | 0.07 |
-| 0.55 | 4 | 25 | 0 | 5 | 0.07 |
-| 0.60 | 4 | 25 | 3 | 2 | 0.37 |
-| 0.65 | 3 | 26 | 4 | 1 | 0.45 |
-| 0.70 ← sugerido | 2 | 27 | 5 | 0 | 0.53 |
-| 0.75 | 0 | 29 | 5 | 0 | 0.50 |
+| 0.30 | 25 | 4 | 0 | 5 | 0.43 |
+| 0.35 | 25 | 4 | 0 | 5 | 0.43 |
+| 0.40 | 25 | 4 | 0 | 5 | 0.43 |
+| 0.45 | 25 | 4 | 0 | 5 | 0.43 |
+| 0.50 | 25 | 4 | 0 | 5 | 0.43 |
+| 0.55 | 25 | 4 | 0 | 5 | 0.43 |
+| 0.60 | 24 | 5 | 0 | 5 | 0.41 |
+| 0.65 ← sugerido | 23 | 6 | 4 | 1 | 0.80 |
+| 0.70 | 19 | 10 | 4 | 1 | 0.73 |
+| 0.75 | 10 | 19 | 5 | 0 | 0.67 |
 | 0.80 | 0 | 29 | 5 | 0 | 0.50 |
 
 *Equilíbrio* é a média entre a taxa de casos válidos aceitos com a categoria certa e a taxa de casos fora do catálogo recusados. O limiar sugerido é o de maior equilíbrio; num empate, o que tem menos falsos positivos, porque responder errado com confiança é pior para o gestor do que dizer que não encontrou.
@@ -135,33 +135,15 @@ Em 3 casos com a categoria errada de propósito, a busca filtrada ficou abaixo d
 
 | Caso | Tipo | Esperado | 1º lugar | Similaridade |
 |---|---|---|---|---|
-| c01 Buraco grande na rua | representativo | Buraco ou pavimento | Tapa-buraco (Buraco ou pavimento) | 0.6944 |
-| c03 Rua de terra virou lamaçal | representativo | Buraco ou pavimento | Tapa-buraco (Buraco ou pavimento) | 0.6374 |
-| c04 Poste apagado | representativo | Iluminação pública | Tapa-buraco (Buraco ou pavimento) | 0.6351 |
-| c05 rua um breu | informal | Iluminação pública | Tapa-buraco (Buraco ou pavimento) | 0.6458 |
-| c06 Lâmpada acesa de dia | representativo | Iluminação pública | Tapa-buraco (Buraco ou pavimento) | 0.6138 |
-| c07 Entulho na calçada | representativo | Lixo e limpeza | Tapa-buraco (Buraco ou pavimento) | 0.5982 |
-| c08 lixo acumulado | informal | Lixo e limpeza | Tapa-buraco (Buraco ou pavimento) | 0.5906 |
-| c09 Lixeira quebrada | representativo | Lixo e limpeza | Tapa-buraco (Buraco ou pavimento) | 0.6281 |
-| c10 Bueiro entupido | representativo | Bueiro e drenagem | Tapa-buraco (Buraco ou pavimento) | 0.6427 |
-| c11 alaga tudo | informal | Bueiro e drenagem | Tapa-buraco (Buraco ou pavimento) | 0.6242 |
-| c12 Tampa de bueiro solta | representativo | Bueiro e drenagem | Tapa-buraco (Buraco ou pavimento) | 0.6772 |
-| c13 Calçada quebrada | representativo | Calçada e acessibilidade | Tapa-buraco (Buraco ou pavimento) | 0.6478 |
-| c14 Sem rampa para cadeirante | representativo | Calçada e acessibilidade | Tapa-buraco (Buraco ou pavimento) | 0.6006 |
-| c15 raiz levantou a calçada | informal | Calçada e acessibilidade | Tapa-buraco (Buraco ou pavimento) | 0.6265 |
-| c16 Placa de pare caída | representativo | Sinalização de trânsito | Tapa-buraco (Buraco ou pavimento) | 0.6525 |
-| c17 Semáforo apagado | representativo | Sinalização de trânsito | Tapa-buraco (Buraco ou pavimento) | 0.6393 |
-| c18 faixa apagou | informal | Sinalização de trânsito | Tapa-buraco (Buraco ou pavimento) | 0.602 |
-| c19 Árvore com galho quebrado | representativo | Praças e áreas verdes | Tapa-buraco (Buraco ou pavimento) | 0.5977 |
-| c20 Mato alto na praça | representativo | Praças e áreas verdes | Tapa-buraco (Buraco ou pavimento) | 0.6073 |
-| c21 brinquedo quebrado | informal | Praças e áreas verdes | Tapa-buraco (Buraco ou pavimento) | 0.6108 |
-| c22 Carro abandonado | representativo | Outros | Tapa-buraco (Buraco ou pavimento) | 0.583 |
-| c23 Material de obra na rua | representativo | Outros | Tapa-buraco (Buraco ou pavimento) | 0.6205 |
-| c28 árvore caindo | ambiguo | Praças e áreas verdes | Tapa-buraco (Buraco ou pavimento) | 0.5968 |
+| c23 Material de obra na rua | representativo | Outros | Fiscalização de Posturas Municipais (Lixo e limpeza) | 0.6993 |
+| c24 Barulho do vizinho | fora_do_catalogo | não encontrar | Fiscalização de Posturas Municipais (Lixo e limpeza) | 0.6115 |
+| c25 Briga na rua | fora_do_catalogo | não encontrar | Fiscalização de Posturas Municipais (Lixo e limpeza) | 0.6302 |
+| c26 Internet caindo | fora_do_catalogo | não encontrar | Poda e remoção de árvores (Praças e áreas verdes) | 0.6144 |
+| c27 Ônibus atrasado | fora_do_catalogo | não encontrar | Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156 (Sinalização de trânsito) | 0.6006 |
+| c29 Problema na rua | ambiguo | não encontrar | Fiscalização de Posturas Municipais (Lixo e limpeza) | 0.7173 |
 | c30 Bueiro entupido | categoria_errada | Bueiro e drenagem | Tapa-buraco (Buraco ou pavimento) | 0.6612 |
-| c31 Poste apagado | categoria_errada | Iluminação pública | Tapa-buraco (Buraco ou pavimento) | 0.6238 |
-| c32 Lixo na praça | categoria_errada | Lixo e limpeza | Tapa-buraco (Buraco ou pavimento) | 0.5875 |
-| c34 Poste apagado | desvio | Iluminação pública | Tapa-buraco (Buraco ou pavimento) | 0.5137 |
+| c31 Poste apagado | categoria_errada | Iluminação pública | Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156 (Sinalização de trânsito) | 0.7037 |
+| c32 Lixo na praça | categoria_errada | Lixo e limpeza | Poda e remoção de árvores (Praças e áreas verdes) | 0.6458 |
 
 <!-- busca:fim -->
 
