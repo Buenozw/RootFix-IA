@@ -4,11 +4,18 @@
 
 As fichas de serviço vêm de páginas públicas da Prefeitura de São Paulo: o Quadro ou Carta de Serviços das subprefeituras, as páginas do SP156 ligadas a eles e páginas de "como solicitar" das subprefeituras. Cada ficha guarda a URL de origem e a data em que foi copiada. O passo a passo da coleta está em [coleta-de-fichas.md](coleta-de-fichas.md).
 
-| Ficha | Serviço | Categoria | Fonte | Coleta |
-|---|---|---|---|---|
-| `tapa-buraco-ipiranga.md` | Tapa-buraco | Buraco ou pavimento | [Subprefeitura Ipiranga](https://prefeitura.sp.gov.br/web/ipiranga/w/opera%C3%A7%C3%A3o-tapa-buraco-no-ipiranga-saiba-como-solicitar-o-servi%C3%A7o) | 10/11/2026 |
+| Ficha | Serviço | Categoria | Fonte | Tipo de página | Coleta |
+|---|---|---|---|---|---|
+| `tapa-buraco-ipiranga.md` | Tapa-buraco | Buraco ou pavimento | [Subprefeitura Ipiranga](https://prefeitura.sp.gov.br/web/ipiranga/w/opera%C3%A7%C3%A3o-tapa-buraco-no-ipiranga-saiba-como-solicitar-o-servi%C3%A7o) | página de serviço | 10/11/2026 |
+| `iluminacao-publica.md` | Serviços de Iluminação Pública | Iluminação pública | [SP Regula](https://prefeitura.sp.gov.br/web/spregula/w/iluminacao_publica/328816) | página de serviço | 18/11/2026 |
+| `limpeza-urbana.md` | Fiscalização de Posturas Municipais | Lixo e limpeza | [SELIMP](https://prefeitura.sp.gov.br/web/subprefeituras/w/secretaria_executiva_de_limpeza_urbana/347920) | página de fiscalização | 18/11/2026 |
+| `limpeza-de-bueiros.md` | Solicitar limpeza de bueiros, boca de lobo e poços de visita | Bueiro e drenagem | [Carta de Serviços (SP156)](https://prefeitura.sp.gov.br/w/servico/limpeza-de-bueiros-boca-de-lobo-e-pocos-de-visita) | página de serviço | 18/11/2026 |
+| `calcadas.md` | Calçadas | Calçada e acessibilidade | [Secretaria das Subprefeituras](https://prefeitura.sp.gov.br/web/subprefeituras/w/calcadas/37439) | página de serviço | 18/11/2026 |
+| `sinalizacao-de-transito.md` | Atendimento da CET pela Central SP156 | Sinalização de trânsito | [Notícia da Prefeitura](https://prefeitura.sp.gov.br/w/noticia/lembre-se-cet-agora-e-156) | notícia | 18/11/2026 |
+| `poda-e-remocao-de-arvores.md` | Poda e remoção de árvores | Praças e áreas verdes | [Subprefeitura Butantã](https://prefeitura.sp.gov.br/web/butanta/w/saiba-como-solicitar-nossos-servi%C3%A7os-de-poda-e-remo%C3%A7%C3%A3o-de-%C3%A1rvores) | página de serviço | 18/11/2026 |
+| `veiculo-abandonado-se.md` | Fiscalização de veículos em situação de abandono | Outros | [Subprefeitura Sé](https://prefeitura.sp.gov.br/web/se/w/carroabandonadose) | notícia | 18/11/2026 |
 
-> Coleta em andamento: a meta é de 30 fichas, pelo menos 3 por categoria. Cada ficha nova entra nesta tabela.
+> Situação em 18/11: uma ficha por categoria. Duas vieram de notícias, não de páginas de serviço, e por isso não trazem prazo nem documentos, e a de veículo abandonado nem traz o canal. A meta continua sendo de 30 fichas, pelo menos 3 por categoria, trocando as notícias por páginas de serviço do SP156. Cada ficha nova entra nesta tabela.
 
 ## Preparação
 

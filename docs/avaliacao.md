@@ -60,9 +60,36 @@ Feitos com `scripts/testar_integracao.py`, a API Java no Render e a conta de ges
 |---|---|---|---|
 | 11/11 | Buraco enorme em frente ao mercado, um carro furou o pneu; comunidade Ipiranga, 7 apoios, gravidade alta; observações: "já tem uma semana", "à noite não dá para ver" | Com limiar 0,70: `encontrado: false`. Com limiar 0,50: Tapa-buraco, órgão e canal da ficha, `prazoReferencia: null`, texto gerado e resumo das observações | O limiar 0,70, sugerido pela rodada com 1 ficha (ver abaixo), barrou um buraco de verdade. Com 0,50 o resultado foi correto: órgão, canal e documentos vieram da ficha, o prazo ficou vazio porque a página não informa prazo, e o texto usou comunidade, tempo, apoios e gravidade sem dados pessoais. Um defeito pequeno: o texto disse que o buraco "causou danos aos veículos", no plural, quando o relato fala de um carro. É uma generalização leve, não uma informação inventada, e é por isso que a resposta sempre pede revisão do gestor antes de enviar. |
 
+## Leitura da rodada de 18/11 (base com 8 fichas)
+
+Base com uma ficha por categoria (8 no total, lista em [dados.md](dados.md#fontes)) e limiar 0,50. Os rótulos dos 34 casos ainda não foram revisados, então os números são provisórios. A seção "Avaliação da busca", gerada mais abaixo, é desta rodada. A seção "Avaliação da geração" ainda é da rodada de 10/11.
+
+**O que melhorou.** A categoria certa ficou em 1º em 86% dos casos (25 de 29), contra 14% com uma ficha só, e entre as 3 primeiras em 90%. Todos os casos representativos e informais acertaram, menos um (c23). Isso inclui os escritos com gíria ou erro de digitação ("mano a rua ta cheia de buraco", "faixa apagou", "árvore caindo"). Os 4 erros vêm de dois motivos bem diferentes, explicados a seguir.
+
+**Cuidado ao ler o 86%.** Com filtro, a busca só enxerga as fichas da categoria que o Spring AI mandou. Então, sempre que o Spring AI acerta, a categoria também sai certa, por construção. O número que mede a busca em si é a coluna **sem filtro: 90% em 1º e 100% no top-3**. E acertar a categoria ainda não é acertar o serviço. Com uma ficha por categoria, "mato alto na praça" (c20) e "balanço do parquinho quebrado" (c21) caem na ficha de poda de árvores. "Tampa de bueiro solta" (c12) cai na de limpeza de bueiros. "Lixeira quebrada" (c09) cai na de fiscalização, e "rua de terra virou lamaçal" (c03) cai na de tapa-buraco. Nenhuma dessas fichas resolve o problema. Nesses casos, o certo é o Gemini responder que nenhuma ficha serve. A métrica de serviço certo, que depende da revisão dos rótulos, é a que vai mostrar isso.
+
+**1. Um rótulo que a coleta deixou desatualizado (c23).** "Uma obra deixou areia e pedra no meio da rua" estava rotulado como `Outros`, com a nota de que dependia de uma ficha de material de construção na via. A busca escolheu a ficha de Fiscalização de Posturas Municipais (0,70), que trata justamente de entulho, resíduos da construção civil e caçambas clandestinas, e indica a GCM (153) para descarte acima de 50 kg. A escolha está certa. Quem precisa mudar é o rótulo: na revisão, o caso passa para `Lixo e limpeza`.
+
+**2. O plano B nunca dispara (c30, c31, c32).** São os três casos em que o Spring AI erra a categoria de propósito. A ideia do plano B era: se a busca filtrada pela categoria errada vier fraca, buscar na base toda. Mas, com a escala comprimida do `gemini-embedding-001`, a ficha da categoria errada ainda pontua de 0,65 a 0,70: o poste apagado chega a 0,70 na ficha da CET, só porque as duas falam de rua e de equipamento. Tudo isso passa do limiar 0,50, então a busca filtrada nunca é considerada "fraca" (0 de 3 casos caíram no plano B).
+
+A própria tabela mostra o efeito: **sem filtro, a busca acerta mais** do que com filtro (90% contra 86% em 1º; 100% contra 90% no top-3). Com uma ficha por categoria, o filtro não ajuda quando o Spring AI acerta, porque a ficha certa já ganha sem ele, e atrapalha quando o Spring AI erra. O ponto mais importante é o top-3 sem filtro de 100%: como o Gemini recebe as 3 melhores fichas, sem o filtro a ficha certa sempre estaria entre as opções dele. É a falha principal desta rodada, e a correção é usar a categoria como preferência, não como restrição.
+
+**3. Os casos de fora do catálogo passam da busca, e isso é esperado.** Os 5 casos que deveriam terminar em "não encontrei" (barulho, briga, internet, ônibus e o vago "tem um problema sério aqui na rua") tiveram similaridade de 0,60 a 0,72 com alguma ficha. O caso vago teve 0,72, mais do que vários problemas reais. Barulho e briga caíram na ficha de *Fiscalização* de Posturas, provavelmente pela palavra "fiscalização". Nenhum limiar separa bem os dois grupos:
+
+- Com **0,50**, todos os 29 casos válidos chegam ao Gemini, e os 5 de fora do catálogo também.
+- Com **0,65**, o limiar sugerido pelo script, 4 dos 5 casos de fora são recusados na busca, mas 2 problemas reais passam a receber "não encontrei" (aceitos com a categoria certa caem de 25 para 23).
+
+**Por que o limiar continua em 0,50.** Os dois erros têm custos diferentes:
+- Um **falso negativo na busca é definitivo**: o Gemini nem é chamado, e o gestor fica sem encaminhamento para um problema real.
+- Um **falso positivo na busca ainda passa pelo Gemini**, que pode recusar. Foi o que ele fez nos testes de integração de 10/11, quando recusou uma ficha de outra subprefeitura.
+
+Por isso a busca fica larga e a recusa fina fica com o Gemini. A próxima rodada da geração com 0,50 confere essa decisão: os 5 casos de fora do catálogo precisam terminar em "não encontrei".
+
+**Qualidade das fichas.** Duas fichas vieram de notícias, não de páginas de serviço: sinalização (CET agora é 156) e veículo abandonado (Subprefeitura Sé). Por isso elas não trazem prazo nem documentos, e a de veículo abandonado nem traz o canal. Para essas fichas, a busca depende mais dos `termos_populares`, que o indexador coloca no começo de cada trecho. A ficha de limpeza urbana é de fiscalização, não de pedido de limpeza. Ela resolve entulho e descarte irregular, mas a solicitação gerada tende a soar como denúncia.
+
 ## Leitura da rodada de 10/11 (base com 1 ficha)
 
-As seções geradas abaixo são de uma rodada feita **com uma ficha só na base** (tapa-buraco do Ipiranga) e com os rótulos ainda não revisados. Os números servem para conferir o funcionamento do pipeline, não para medir a qualidade final. A leitura deles:
+Esta rodada foi feita **com uma ficha só na base** (tapa-buraco do Ipiranga) e com os rótulos ainda não revisados. A seção de busca gerada mais abaixo já é da rodada de 18/11. A seção de geração ainda é desta rodada. Os números serviam para conferir o funcionamento do pipeline, não para medir a qualidade final. A leitura deles:
 
 - **"Categoria certa em 1º: 14%" é o máximo possível nessa base.** Dos 29 casos com serviço esperado, só 4 são de buraco, a única categoria com ficha, e a busca pôs a categoria certa em 1º nos 4 (4 de 4). Os outros 25 não tinham ficha que pudesse acertar.
 - **A escala de similaridade do `gemini-embedding-001` é comprimida.** Os buracos tiveram similaridade de 0,64 a 0,73 com a ficha de tapa-buraco, mas casos sem relação também ficaram altos: 0,51 a 0,68, incluindo os de fora do catálogo (0,55 a 0,61) e o relato vago "tem um problema sério aqui na rua" (0,68). Com um documento só, não existe limiar que separe bem os dois grupos: 0,70 recusou todos os casos de fora do catálogo, mas também barrou 2 dos 4 buracos.
@@ -73,10 +100,12 @@ As seções geradas abaixo são de uma rodada feita **com uma ficha só na base*
 
 ### Próxima rodada
 
-1. Coletar as fichas (meta: 30, pelo menos 3 por categoria; links em [coleta-de-fichas.md](coleta-de-fichas.md)) e rodar `python scripts/indexar.py`.
-2. Revisar os 34 casos e preencher `servico_esperado`.
-3. Rodar `python scripts/avaliar_busca.py`, conferir o limiar sugerido contra os casos de buraco reais e rodar `python scripts/avaliar_geracao.py`.
-4. Reescrever esta seção com a nova leitura.
+Feito em 18/11: uma ficha por categoria, base recriada e busca medida (leitura acima). Falta:
+
+1. Rodar `python scripts/avaliar_geracao.py` com o limiar 0,50, para conferir se o Gemini recusa os 5 casos de fora do catálogo que passam da busca.
+2. Corrigir o plano B: usar a categoria do Spring AI como preferência, sem esconder as fichas das outras categorias, e medir de novo os casos c30 a c32.
+3. Revisar os 34 casos: preencher `servico_esperado`, passar o c23 para `Lixo e limpeza` e, nos casos sem ficha que resolva (c03, c09, c12, c20 e c21, com a base atual), deixar `servico_esperado` como `null`.
+4. Ampliar a base para 3 fichas por categoria, trocando as fichas tiradas de notícias por páginas de serviço do SP156. Links em [coleta-de-fichas.md](coleta-de-fichas.md).
 
 <!-- busca:inicio -->
 

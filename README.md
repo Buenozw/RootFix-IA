@@ -155,7 +155,8 @@ Resumo; números completos e análise em [docs/avaliacao.md](docs/avaliacao.md).
 | Encaminhamento completo (`/simular`) | Buraco no Ipiranga: serviço, órgão e canal vindos da ficha, prazo vazio porque a página não informa, texto gerado sem dados pessoais. Defeito pequeno: o texto pôs "veículos" no plural quando o relato falava de um carro |
 | Falha encontrada e corrigida | Com o Gemini fora do ar, o plano B repassou o órgão de uma ficha de outra subprefeitura; agora ele deixa o órgão de fora e avisa para conferir |
 | Busca, rodada com 1 ficha | A categoria certa ficou em 1º nos 4 de 4 casos possíveis (os buracos). Mostrou que a escala do `gemini-embedding-001` é comprimida: casos sem relação também pontuam alto, então o limiar sozinho não separa, e o Gemini faz a segunda barreira. Leitura completa em [docs/avaliacao.md](docs/avaliacao.md#leitura-da-rodada-de-1011-base-com-1-ficha) |
-| Busca e geração com a base completa | _próxima rodada, depois da coleta das fichas_ |
+| Busca, rodada com 8 fichas (uma por categoria) | Categoria certa em 1º em 86% dos casos com filtro e em 90% sem filtro; no top-3, 90% e 100%. Falha encontrada: com a escala comprimida, a ficha da categoria errada ainda passa do limiar, então o plano B nunca dispara quando o Spring AI erra (0 de 3). Os 5 casos de fora do catálogo passam da busca e dependem do Gemini para a recusa. Leitura completa em [docs/avaliacao.md](docs/avaliacao.md#leitura-da-rodada-de-1811-base-com-8-fichas) |
+| Geração com a base completa | _próxima rodada, com o limiar 0,50_ |
 
 ## Limitações
 
@@ -164,8 +165,9 @@ Resumo; números completos e análise em [docs/avaliacao.md](docs/avaliacao.md).
 - **Prazos são referência.** Vêm da página consultada, não são compromisso da prefeitura.
 - **O serviço não protocola nada.** O gestor revisa o texto e envia no SP156.
 - **Dependência do Gemini.** A busca (embeddings) e a geração usam a API do Gemini e a cota gratuita. Se a geração falhar, a resposta traz o serviço e a fonte sem o texto; se a busca falhar, o serviço responde que está indisponível.
-- **Dependência do Spring AI.** A categoria vinda da publicação filtra a busca. Se ela estiver errada, a busca filtrada fica fraca e o serviço busca na base toda, mas um erro de categoria ainda pode puxar a ficha errada.
-- **Textos muito curtos ou vagos** ("problema na rua") não têm informação para a busca e tendem a "não encontrei".
+- **Dependência do Spring AI.** A categoria vinda da publicação filtra a busca. A avaliação de 18/11 mostrou que, quando essa categoria está errada, a busca filtrada não fica fraca o bastante para acionar a busca na base toda, e o Gemini recebe só fichas da categoria errada. A correção está planejada em [docs/avaliacao.md](docs/avaliacao.md#próxima-rodada).
+- **Uma ficha por categoria.** Problemas da categoria que não são o serviço da ficha (mato alto e poda de árvore, por exemplo) dependem do Gemini para responder que nenhuma ficha serve.
+- **Textos muito curtos ou vagos** ("tem um problema sério aqui na rua") não têm informação para escolher um serviço. Mesmo assim, a busca deu 0,72 a esse relato, então quem precisa recusar é o Gemini.
 - **Tempo de resposta** de 10 a 20 segundos, e até 1 a 2 minutos quando os serviços estão dormindo no Render gratuito.
 
 ## Uso responsável
