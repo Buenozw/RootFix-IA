@@ -7,12 +7,10 @@ Grupo **Rooted**
 | Integrante | RM |
 |---|---|
 | João Victor Caetano | 562074 |
-| João Victor Bueno Castelini | RM a preencher |
-| Felipe Furlanetto | RM a preencher |
-| Raul Rezende | RM a preencher |
-| Ryan Vetoriano | RM a preencher |
-
-Vídeo de demonstração: _link a preencher_
+| João Victor Bueno Castelini | RM 564115 |
+| Felipe Furlanetto | RM 562766 |
+| Raul Rezende | RM 564002 |
+| Ryan Vetoriano | RM 565667 |
 
 **Serviço no ar:** https://rootfix-ia.onrender.com · documentação interativa em [/docs](https://rootfix-ia.onrender.com/docs) · estado em [/health](https://rootfix-ia.onrender.com/health)
 **No app:** botão "Encaminhar com IA" no [app mobile do RootFix](https://github.com/Felipe-Furlanetto0504/GS-Mobile-Quarto-Semestre)
