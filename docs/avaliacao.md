@@ -35,7 +35,16 @@ python scripts/avaliar_geracao.py   # mede o encaminhamento completo com o Gemin
 
 O limiar sugerido vai para o `.env` como `LIMIAR_SIMILARIDADE`; depois de mudar, rode a avaliação da geração de novo.
 
-A avaliação da geração faz uma chamada ao Gemini por caso, com 4 segundos de pausa entre elas para não estourar a cota gratuita (cerca de 4 minutos para 34 casos; `--pausa` muda a espera). No fim, ela simula o Gemini fora do ar num caso e confere se a resposta ainda traz o serviço e a fonte.
+A avaliação da geração faz uma chamada ao Gemini por caso, com 4 segundos de pausa entre elas (`--pausa` muda a espera). No fim, ela simula o Gemini fora do ar num caso e confere se a resposta ainda traz o serviço e a fonte.
+
+**Rodada em partes.** A cota gratuita do Gemini é de **20 pedidos por dia** por modelo, menos que os 34 casos. Descobrimos isso em 18/11, quando uma rodada inteira terminou no plano B: o Gemini respondeu 503 (sobrecarga) e depois 429 (cota esgotada). O gerador troca qualquer erro pelo plano B, o que é certo para o serviço, mas fazia a avaliação contar como resultado casos em que o Gemini nem respondeu. Agora o script:
+
+- percebe quando o Gemini deu erro num caso e deixa o caso **pendente**, em vez de contá-lo;
+- para ao receber um 429 e grava o relatório marcado como **incompleto**;
+- guarda cada caso medido em `data/avaliacao/geracao_parcial.json` e, na execução seguinte, **continua de onde parou**;
+- recomeça do zero sozinho se mudarem os casos, as fichas, o código da busca ou da geração, o limiar ou o modelo (`--do-zero` força isso).
+
+A mesma cota vale para o serviço no Render se ele usar a mesma chave. Por isso a avaliação deve rodar com a chave de outro projeto do Google, para não gastar os pedidos do app.
 
 ### Como a geração evita inventar
 
@@ -103,7 +112,7 @@ Esta rodada foi feita **com uma ficha só na base** (tapa-buraco do Ipiranga) e 
 Feito em 18/11: uma ficha por categoria, base recriada e busca medida (leitura acima). Falta:
 
 1. Rodar `python scripts/avaliar_geracao.py` com o limiar 0,50, para conferir se o Gemini recusa os 5 casos de fora do catálogo que passam da busca.
-2. Corrigir o plano B: usar a categoria do Spring AI como preferência, sem esconder as fichas das outras categorias, e medir de novo os casos c30 a c32.
+2. ~~Corrigir o plano B~~ (feito em 18/11: a busca agora consulta sempre a base toda e garante uma das 3 vagas do Gemini para a melhor ficha da categoria do Spring AI; `app/busca.py`, com testes). Falta medir de novo com `python scripts/avaliar_busca.py`, principalmente os casos c30 a c32.
 3. Revisar os 34 casos: preencher `servico_esperado`, passar o c23 para `Lixo e limpeza` e, nos casos sem ficha que resolva (c03, c09, c12, c20 e c21, com a base atual), deixar `servico_esperado` como `null`.
 4. Ampliar a base para 3 fichas por categoria, trocando as fichas tiradas de notícias por páginas de serviço do SP156. Links em [coleta-de-fichas.md](coleta-de-fichas.md).
 
@@ -117,10 +126,10 @@ Feito em 18/11: uma ficha por categoria, base recriada e busca medida (leitura a
 
 34 casos, 29 com serviço esperado na base. Limiar usado: 0.50.
 
-| Métrica | Com filtro por categoria | Sem filtro |
+| Métrica | Com a categoria do Spring AI | Sem a categoria |
 |---|---|---|
-| Categoria certa em 1º | 86% | 90% |
-| Categoria certa no top-3 | 90% | 100% |
+| Categoria certa em 1º | 90% | 90% |
+| Categoria certa no top-3 | 100% | 100% |
 | Serviço certo em 1º | — | — |
 | Serviço certo no top-3 | — | — |
 | MRR do serviço | — | — |
@@ -129,32 +138,32 @@ Feito em 18/11: uma ficha por categoria, base recriada e busca medida (leitura a
 
 | Categoria | Acertos | Casos |
 |---|---|---|
-| Buraco ou pavimento | 4 | 4 |
-| Iluminação pública | 4 | 5 |
-| Lixo e limpeza | 3 | 4 |
-| Bueiro e drenagem | 3 | 4 |
+| Buraco ou pavimento | 3 | 4 |
+| Iluminação pública | 5 | 5 |
+| Lixo e limpeza | 4 | 4 |
+| Bueiro e drenagem | 4 | 4 |
 | Calçada e acessibilidade | 3 | 3 |
 | Sinalização de trânsito | 3 | 3 |
-| Praças e áreas verdes | 4 | 4 |
+| Praças e áreas verdes | 3 | 4 |
 | Outros | 1 | 2 |
 
 ### Quando o Spring AI erra a categoria
 
-Em 3 casos com a categoria errada de propósito, a busca filtrada ficou abaixo do limiar e caiu no plano B (base toda) em 0; a categoria certa terminou em 1º em 0.
+Em 3 casos com a categoria errada de propósito, uma ficha de outra categoria passou à frente da categoria do Spring AI em 3; a categoria certa terminou em 1º em 3 e esteve entre as 3 fichas enviadas ao Gemini em 3.
 
 ### Escolha do limiar de "não encontrei"
 
 | Limiar | Aceitos certos | Falsos negativos | Recusas certas | Falsos positivos | Equilíbrio |
 |---|---|---|---|---|---|
-| 0.30 | 25 | 4 | 0 | 5 | 0.43 |
-| 0.35 | 25 | 4 | 0 | 5 | 0.43 |
-| 0.40 | 25 | 4 | 0 | 5 | 0.43 |
-| 0.45 | 25 | 4 | 0 | 5 | 0.43 |
-| 0.50 | 25 | 4 | 0 | 5 | 0.43 |
-| 0.55 | 25 | 4 | 0 | 5 | 0.43 |
-| 0.60 | 24 | 5 | 0 | 5 | 0.41 |
-| 0.65 ← sugerido | 23 | 6 | 4 | 1 | 0.80 |
-| 0.70 | 19 | 10 | 4 | 1 | 0.73 |
+| 0.30 | 26 | 3 | 0 | 5 | 0.45 |
+| 0.35 | 26 | 3 | 0 | 5 | 0.45 |
+| 0.40 | 26 | 3 | 0 | 5 | 0.45 |
+| 0.45 | 26 | 3 | 0 | 5 | 0.45 |
+| 0.50 | 26 | 3 | 0 | 5 | 0.45 |
+| 0.55 | 26 | 3 | 0 | 5 | 0.45 |
+| 0.60 | 25 | 4 | 0 | 5 | 0.43 |
+| 0.65 ← sugerido | 25 | 4 | 4 | 1 | 0.83 |
+| 0.70 | 20 | 9 | 4 | 1 | 0.74 |
 | 0.75 | 10 | 19 | 5 | 0 | 0.67 |
 | 0.80 | 0 | 29 | 5 | 0 | 0.50 |
 
@@ -164,15 +173,14 @@ Em 3 casos com a categoria errada de propósito, a busca filtrada ficou abaixo d
 
 | Caso | Tipo | Esperado | 1º lugar | Similaridade |
 |---|---|---|---|---|
+| c03 Rua de terra virou lamaçal | representativo | Buraco ou pavimento | Fiscalização de Posturas Municipais (Lixo e limpeza) | 0.6555 |
+| c21 brinquedo quebrado | informal | Praças e áreas verdes | Calçadas (Calçada e acessibilidade) | 0.6469 |
 | c23 Material de obra na rua | representativo | Outros | Fiscalização de Posturas Municipais (Lixo e limpeza) | 0.6993 |
 | c24 Barulho do vizinho | fora_do_catalogo | não encontrar | Fiscalização de Posturas Municipais (Lixo e limpeza) | 0.6115 |
 | c25 Briga na rua | fora_do_catalogo | não encontrar | Fiscalização de Posturas Municipais (Lixo e limpeza) | 0.6302 |
 | c26 Internet caindo | fora_do_catalogo | não encontrar | Poda e remoção de árvores (Praças e áreas verdes) | 0.6144 |
 | c27 Ônibus atrasado | fora_do_catalogo | não encontrar | Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156 (Sinalização de trânsito) | 0.6006 |
 | c29 Problema na rua | ambiguo | não encontrar | Fiscalização de Posturas Municipais (Lixo e limpeza) | 0.7173 |
-| c30 Bueiro entupido | categoria_errada | Bueiro e drenagem | Tapa-buraco (Buraco ou pavimento) | 0.6612 |
-| c31 Poste apagado | categoria_errada | Iluminação pública | Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156 (Sinalização de trânsito) | 0.7037 |
-| c32 Lixo na praça | categoria_errada | Lixo e limpeza | Poda e remoção de árvores (Praças e áreas verdes) | 0.6458 |
 
 <!-- busca:fim -->
 

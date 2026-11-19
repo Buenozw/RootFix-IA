@@ -7,7 +7,7 @@ Precisa da base criada pelo scripts/indexar.py. Grava os números em docs/avalia
 O que mede:
 - acerto da categoria e do serviço no 1º lugar (top-1) e entre os 3 primeiros (top-3);
 - MRR (média de 1/posição do serviço certo: 1 = sempre em 1º, 0,5 = em média em 2º);
-- efeito do filtro por categoria (com e sem filtro) e do plano B quando o Spring AI erra;
+- efeito da categoria do Spring AI (com e sem ela) e do plano B quando o Spring AI erra;
 - limiar de "não encontrei": para cada valor, quantos casos válidos passam e quantos casos
   fora do catálogo são recusados.
 """
@@ -161,6 +161,9 @@ def avaliar(casos: list[dict], buscador: Buscador) -> dict:
             "categoria_certa_no_fim": sum(
                 bool(com_filtro[c["id"]].melhor) and com_filtro[c["id"]].melhor.categoria == c["categoria_esperada"]
                 for c in errados),
+            "categoria_certa_para_o_gemini": sum(
+                any(x.categoria == c["categoria_esperada"] for x in com_filtro[c["id"]].candidatos[:3])
+                for c in errados),
         },
         "varredura": varredura,
         "limiar_sugerido": melhor["limiar"],
@@ -180,7 +183,7 @@ def relatorio(r: dict) -> str:
     linhas += [
         f"{r['total_casos']} casos, {cf['casos_validos']} com serviço esperado na base. "
         f"Limiar usado: {r['limiar_atual']:.2f}.", "",
-        "| Métrica | Com filtro por categoria | Sem filtro |",
+        "| Métrica | Com a categoria do Spring AI | Sem a categoria |",
         "|---|---|---|",
         f"| Categoria certa em 1º | {_pct(cf['categoria_top1'], cf['casos_validos'])} | "
         f"{_pct(sf['categoria_top1'], sf['casos_validos'])} |",
@@ -201,9 +204,10 @@ def relatorio(r: dict) -> str:
     pb = r["plano_b"]
     linhas += [
         "", "### Quando o Spring AI erra a categoria", "",
-        f"Em {pb['casos_categoria_errada']} casos com a categoria errada de propósito, a busca filtrada ficou "
-        f"abaixo do limiar e caiu no plano B (base toda) em {pb['acionado']}; a categoria certa terminou em 1º "
-        f"em {pb['categoria_certa_no_fim']}.", "",
+        f"Em {pb['casos_categoria_errada']} casos com a categoria errada de propósito, uma ficha de outra "
+        f"categoria passou à frente da categoria do Spring AI em {pb['acionado']}; a categoria certa terminou "
+        f"em 1º em {pb['categoria_certa_no_fim']} e esteve entre as 3 fichas enviadas ao Gemini em "
+        f"{pb.get('categoria_certa_para_o_gemini', '—')}.", "",
         "### Escolha do limiar de \"não encontrei\"", "",
         "| Limiar | Aceitos certos | Falsos negativos | Recusas certas | Falsos positivos | Equilíbrio |",
         "|---|---|---|---|---|---|",

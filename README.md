@@ -42,7 +42,7 @@ O **Encaminhador do gestor** resolve essa etapa. Quando o gestor toca em "Encami
 |---|---|
 | 01 · Aplicação ao problema | Esta seção; público e contribuição acima |
 | 02 · IA generativa no fluxo | Gemini escreve a solicitação e o resumo dentro do `POST /encaminhar/{id}` ([gerador.py](app/gerador.py)), publicado no Render e chamado pela tela de encaminhamento do app ([No app](#no-app)) |
-| 03 · Aprofundamento técnico | RAG básico sobre fichas oficiais do SP156: embeddings, base vetorial, busca filtrada por categoria e limiar ([busca.py](app/busca.py)); justificativa abaixo |
+| 03 · Aprofundamento técnico | RAG básico sobre fichas oficiais do SP156: embeddings, base vetorial, busca com preferência pela categoria e limiar ([busca.py](app/busca.py)); justificativa abaixo |
 | 04 · Dados e arquitetura | [docs/dados.md](docs/dados.md) (fontes e preparação) e [docs/arquitetura.md](docs/arquitetura.md) (fluxo e decisões) |
 | 05 · Avaliação dos resultados | [docs/avaliacao.md](docs/avaliacao.md): casos rotulados, métricas de busca e de geração, casos de falha e testes de integração |
 | 06 · Organização e uso responsável | Instruções abaixo, `.env` fora do Git, anonimização antes do Gemini, limitações explícitas |
@@ -62,7 +62,7 @@ flowchart LR
 1. O app manda o id do problema e o token do gestor.
 2. O serviço lê o problema e as observações na API Java **com o mesmo token**: quem decide o acesso é o Java. Só segue se o problema foi adotado e quem pediu é o gestor da comunidade.
 3. Descarta autores e coordenadas e tira e-mail, telefone, CPF e número da casa do texto.
-4. Busca as fichas mais parecidas, filtrando pela categoria que o Spring AI deu. Se a busca filtrada for fraca (o Spring AI pode errar), busca na base toda. Abaixo do limiar, responde que não encontrou, **sem chamar o Gemini**.
+4. Busca as fichas mais parecidas na base toda e garante que a melhor ficha da categoria que o Spring AI deu esteja entre as 3 enviadas ao Gemini. A categoria é uma preferência, não um filtro: se o Spring AI errar, a ficha certa de outra categoria continua na lista. Abaixo do limiar, responde que não encontrou, **sem chamar o Gemini**.
 5. Manda ao Gemini as 3 melhores fichas e o relato. O Gemini escolhe a ficha (ou diz que nenhuma serve) e escreve a solicitação, em JSON estruturado.
 6. **Serviço, órgão, canal, prazo e fonte saem da ficha escolhida, nunca do modelo.**
 
@@ -149,13 +149,13 @@ Resumo; números completos e análise em [docs/avaliacao.md](docs/avaliacao.md).
 
 | O que | Resultado |
 |---|---|
-| Testes automatizados | 94 testes; cobertura de 92% do código do serviço (medida no Windows em 10/11) |
+| Testes automatizados | 103 testes; cobertura de 92% do código do serviço (medida no Windows em 10/11, com 94 testes) |
 | Memória no deploy | Pico de 111 MB com embeddings do Gemini, contra o limite de 512 MB (modelo local: 773 MB) |
 | Integração real com a API Java | Problema 2 (buraco na Bela Vista) com só a ficha do Ipiranga na base: o Gemini **recusou** a ficha, porque ela vale para outra subprefeitura. Recusa correta: aceitar mandaria o gestor cobrar o órgão errado |
 | Encaminhamento completo (`/simular`) | Buraco no Ipiranga: serviço, órgão e canal vindos da ficha, prazo vazio porque a página não informa, texto gerado sem dados pessoais. Defeito pequeno: o texto pôs "veículos" no plural quando o relato falava de um carro |
 | Falha encontrada e corrigida | Com o Gemini fora do ar, o plano B repassou o órgão de uma ficha de outra subprefeitura; agora ele deixa o órgão de fora e avisa para conferir |
 | Busca, rodada com 1 ficha | A categoria certa ficou em 1º nos 4 de 4 casos possíveis (os buracos). Mostrou que a escala do `gemini-embedding-001` é comprimida: casos sem relação também pontuam alto, então o limiar sozinho não separa, e o Gemini faz a segunda barreira. Leitura completa em [docs/avaliacao.md](docs/avaliacao.md#leitura-da-rodada-de-1011-base-com-1-ficha) |
-| Busca, rodada com 8 fichas (uma por categoria) | Categoria certa em 1º em 86% dos casos com filtro e em 90% sem filtro; no top-3, 90% e 100%. Falha encontrada: com a escala comprimida, a ficha da categoria errada ainda passa do limiar, então o plano B nunca dispara quando o Spring AI erra (0 de 3). Os 5 casos de fora do catálogo passam da busca e dependem do Gemini para a recusa. Leitura completa em [docs/avaliacao.md](docs/avaliacao.md#leitura-da-rodada-de-1811-base-com-8-fichas) |
+| Busca, rodada com 8 fichas (uma por categoria) | Categoria certa em 1º em 86% dos casos com filtro e em 90% sem filtro; no top-3, 90% e 100%. Falha encontrada: com a escala comprimida, a ficha da categoria errada ainda passa do limiar, então o plano B nunca dispara quando o Spring AI erra (0 de 3). **Corrigida:** a categoria virou preferência, e a busca na base toda acontece sempre. Os 5 casos de fora do catálogo passam da busca e dependem do Gemini para a recusa. Leitura completa em [docs/avaliacao.md](docs/avaliacao.md#leitura-da-rodada-de-1811-base-com-8-fichas) |
 | Geração com a base completa | _próxima rodada, com o limiar 0,50_ |
 
 ## Limitações
@@ -165,7 +165,7 @@ Resumo; números completos e análise em [docs/avaliacao.md](docs/avaliacao.md).
 - **Prazos são referência.** Vêm da página consultada, não são compromisso da prefeitura.
 - **O serviço não protocola nada.** O gestor revisa o texto e envia no SP156.
 - **Dependência do Gemini.** A busca (embeddings) e a geração usam a API do Gemini e a cota gratuita. Se a geração falhar, a resposta traz o serviço e a fonte sem o texto; se a busca falhar, o serviço responde que está indisponível.
-- **Dependência do Spring AI.** A categoria vinda da publicação filtra a busca. A avaliação de 18/11 mostrou que, quando essa categoria está errada, a busca filtrada não fica fraca o bastante para acionar a busca na base toda, e o Gemini recebe só fichas da categoria errada. A correção está planejada em [docs/avaliacao.md](docs/avaliacao.md#próxima-rodada).
+- **Dependência do Spring AI.** A categoria vinda da publicação garante uma vaga, entre as 3 fichas enviadas ao Gemini, para a melhor ficha daquela categoria. Antes ela filtrava a busca, e a avaliação de 18/11 mostrou que, com a categoria errada, o Gemini recebia só fichas erradas. Agora a ficha certa de outra categoria continua na lista, mas quem escolhe entre elas é o Gemini. Se ele estiver fora do ar, vale a ficha mais parecida.
 - **Uma ficha por categoria.** Problemas da categoria que não são o serviço da ficha (mato alto e poda de árvore, por exemplo) dependem do Gemini para responder que nenhuma ficha serve.
 - **Textos muito curtos ou vagos** ("tem um problema sério aqui na rua") não têm informação para escolher um serviço. Mesmo assim, a busca deu 0,72 a esse relato, então quem precisa recusar é o Gemini.
 - **Tempo de resposta** de 10 a 20 segundos, e até 1 a 2 minutos quando os serviços estão dormindo no Render gratuito.

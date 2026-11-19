@@ -35,8 +35,8 @@ sequenceDiagram
   Java-->>IA: observações
   Note over IA: descarta autores e coordenadas;<br/>tira e-mail, telefone, CPF e nº da casa do texto
   IA->>Gemini: embedding do título + descrição (RETRIEVAL_QUERY)
-  IA->>Base: busca filtrada pela categoria
-  Note over IA,Base: fraca? busca na base toda (plano B da categoria)<br/>abaixo do limiar? "não encontrei", sem chamar o Gemini
+  IA->>Base: busca na base toda + busca na categoria do Spring AI
+  Note over IA,Base: junta as duas; a melhor da categoria fica entre as 3 primeiras<br/>abaixo do limiar? "não encontrei", sem chamar o Gemini
   IA->>Gemini: fichas F1–F3 + relato entre <dados_do_morador>
   Gemini-->>IA: ficha escolhida, texto, resumo, motivo (JSON)
   Note over IA: serviço, órgão, canal, prazo e fonte<br/>vêm da ficha, não do modelo
@@ -53,7 +53,7 @@ Se o Gemini falhar na geração, a resposta traz o serviço e a fonte achados na
 | `app/cliente_java.py` | Chamadas à API Java com o JWT repassado; converte a resposta sem dados de pessoas |
 | `app/anonimizacao.py` | Tira e-mail, telefone, CPF e número da casa do texto livre |
 | `app/servico.py` | Junta anonimização, busca e geração; recarrega a base se ela for recriada |
-| `app/busca.py` | Busca na base com filtro por categoria, plano B e limiar |
+| `app/busca.py` | Busca na base toda com preferência pela categoria do Spring AI, e limiar |
 | `app/embeddings.py` | Embeddings pelo Gemini (padrão) ou modelo local; assinatura do modelo |
 | `app/gerador.py` | Monta o pedido ao Gemini, lê o JSON estruturado, aplica o plano B |
 | `app/fichas.py`, `app/preparacao.py` | Validação, limpeza e divisão das fichas em trechos |

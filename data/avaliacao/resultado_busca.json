@@ -4,27 +4,27 @@
   "nao_revisados": 34,
   "com_filtro": {
     "casos_validos": 29,
-    "categoria_top1": 25,
-    "categoria_top3": 26,
+    "categoria_top1": 26,
+    "categoria_top3": 29,
     "casos_com_servico": 0,
     "servico_top1": 0,
     "servico_top3": 0,
     "mrr": null,
     "por_categoria": {
       "Buraco ou pavimento": [
-        4,
+        3,
         4
       ],
       "Iluminação pública": [
-        4,
+        5,
         5
       ],
       "Lixo e limpeza": [
-        3,
+        4,
         4
       ],
       "Bueiro e drenagem": [
-        3,
+        4,
         4
       ],
       "Calçada e acessibilidade": [
@@ -36,7 +36,7 @@
         3
       ],
       "Praças e áreas verdes": [
-        4,
+        3,
         4
       ],
       "Outros": [
@@ -90,52 +90,61 @@
   },
   "plano_b": {
     "casos_categoria_errada": 3,
-    "acionado": 0,
-    "categoria_certa_no_fim": 0
+    "acionado": 3,
+    "categoria_certa_no_fim": 3,
+    "categoria_certa_para_o_gemini": 3
   },
   "varredura": [
     {
       "limiar": 0.3,
-      "aceitos_certos": 25,
-      "falsos_negativos": 4,
+      "aceitos_certos": 26,
+      "falsos_negativos": 3,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.431
+      "equilibrio": 0.448
     },
     {
       "limiar": 0.35,
-      "aceitos_certos": 25,
-      "falsos_negativos": 4,
+      "aceitos_certos": 26,
+      "falsos_negativos": 3,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.431
+      "equilibrio": 0.448
     },
     {
       "limiar": 0.4,
-      "aceitos_certos": 25,
-      "falsos_negativos": 4,
+      "aceitos_certos": 26,
+      "falsos_negativos": 3,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.431
+      "equilibrio": 0.448
     },
     {
       "limiar": 0.45,
-      "aceitos_certos": 25,
-      "falsos_negativos": 4,
+      "aceitos_certos": 26,
+      "falsos_negativos": 3,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.431
+      "equilibrio": 0.448
     },
     {
       "limiar": 0.5,
-      "aceitos_certos": 25,
-      "falsos_negativos": 4,
+      "aceitos_certos": 26,
+      "falsos_negativos": 3,
       "recusas_certas": 0,
       "falsos_positivos": 5,
-      "equilibrio": 0.431
+      "equilibrio": 0.448
     },
     {
       "limiar": 0.55,
+      "aceitos_certos": 26,
+      "falsos_negativos": 3,
+      "recusas_certas": 0,
+      "falsos_positivos": 5,
+      "equilibrio": 0.448
+    },
+    {
+      "limiar": 0.6,
       "aceitos_certos": 25,
       "falsos_negativos": 4,
       "recusas_certas": 0,
@@ -143,28 +152,20 @@
       "equilibrio": 0.431
     },
     {
-      "limiar": 0.6,
-      "aceitos_certos": 24,
-      "falsos_negativos": 5,
-      "recusas_certas": 0,
-      "falsos_positivos": 5,
-      "equilibrio": 0.414
-    },
-    {
       "limiar": 0.65,
-      "aceitos_certos": 23,
-      "falsos_negativos": 6,
+      "aceitos_certos": 25,
+      "falsos_negativos": 4,
       "recusas_certas": 4,
       "falsos_positivos": 1,
-      "equilibrio": 0.797
+      "equilibrio": 0.831
     },
     {
       "limiar": 0.7,
-      "aceitos_certos": 19,
-      "falsos_negativos": 10,
+      "aceitos_certos": 20,
+      "falsos_negativos": 9,
       "recusas_certas": 4,
       "falsos_positivos": 1,
-      "equilibrio": 0.728
+      "equilibrio": 0.745
     },
     {
       "limiar": 0.75,
@@ -199,6 +200,16 @@
           "servico": "Tapa-buraco",
           "categoria": "Buraco ou pavimento",
           "similaridade": 0.6944
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6565
+        },
+        {
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.6539
         }
       ]
     },
@@ -216,6 +227,16 @@
           "servico": "Tapa-buraco",
           "categoria": "Buraco ou pavimento",
           "similaridade": 0.7255
+        },
+        {
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.6739
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6626
         }
       ]
     },
@@ -227,8 +248,18 @@
       "servico_esperado": null,
       "deveria_encontrar": true,
       "encontrado": true,
-      "plano_b": false,
+      "plano_b": true,
       "top3": [
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6555
+        },
+        {
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.654
+        },
         {
           "servico": "Tapa-buraco",
           "categoria": "Buraco ou pavimento",
@@ -250,6 +281,16 @@
           "servico": "Serviços de Iluminação Pública",
           "categoria": "Iluminação pública",
           "similaridade": 0.7614
+        },
+        {
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.6955
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6522
         }
       ]
     },
@@ -267,6 +308,16 @@
           "servico": "Serviços de Iluminação Pública",
           "categoria": "Iluminação pública",
           "similaridade": 0.7519
+        },
+        {
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.6958
+        },
+        {
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.6712
         }
       ]
     },
@@ -284,6 +335,16 @@
           "servico": "Serviços de Iluminação Pública",
           "categoria": "Iluminação pública",
           "similaridade": 0.7389
+        },
+        {
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.6538
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6485
         }
       ]
     },
@@ -301,6 +362,16 @@
           "servico": "Fiscalização de Posturas Municipais",
           "categoria": "Lixo e limpeza",
           "similaridade": 0.7547
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6922
+        },
+        {
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.6486
         }
       ]
     },
@@ -318,6 +389,16 @@
           "servico": "Fiscalização de Posturas Municipais",
           "categoria": "Lixo e limpeza",
           "similaridade": 0.765
+        },
+        {
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.6636
+        },
+        {
+          "servico": "Fiscalização de veículos em situação de abandono",
+          "categoria": "Outros",
+          "similaridade": 0.6615
         }
       ]
     },
@@ -335,6 +416,16 @@
           "servico": "Fiscalização de Posturas Municipais",
           "categoria": "Lixo e limpeza",
           "similaridade": 0.7148
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6689
+        },
+        {
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.668
         }
       ]
     },
@@ -352,6 +443,16 @@
           "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
           "categoria": "Bueiro e drenagem",
           "similaridade": 0.7698
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6729
+        },
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6427
         }
       ]
     },
@@ -369,6 +470,16 @@
           "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
           "categoria": "Bueiro e drenagem",
           "similaridade": 0.7506
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.678
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6371
         }
       ]
     },
@@ -386,6 +497,16 @@
           "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
           "categoria": "Bueiro e drenagem",
           "similaridade": 0.7045
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.683
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6805
         }
       ]
     },
@@ -403,6 +524,16 @@
           "servico": "Calçadas",
           "categoria": "Calçada e acessibilidade",
           "similaridade": 0.7565
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6914
+        },
+        {
+          "servico": "Tapa-buraco",
+          "categoria": "Buraco ou pavimento",
+          "similaridade": 0.6478
         }
       ]
     },
@@ -420,6 +551,16 @@
           "servico": "Calçadas",
           "categoria": "Calçada e acessibilidade",
           "similaridade": 0.693
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6475
+        },
+        {
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.6328
         }
       ]
     },
@@ -437,6 +578,16 @@
           "servico": "Calçadas",
           "categoria": "Calçada e acessibilidade",
           "similaridade": 0.7181
+        },
+        {
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.6738
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6484
         }
       ]
     },
@@ -454,6 +605,16 @@
           "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
           "categoria": "Sinalização de trânsito",
           "similaridade": 0.7228
+        },
+        {
+          "servico": "Fiscalização de veículos em situação de abandono",
+          "categoria": "Outros",
+          "similaridade": 0.6805
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6603
         }
       ]
     },
@@ -471,6 +632,16 @@
           "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
           "categoria": "Sinalização de trânsito",
           "similaridade": 0.7423
+        },
+        {
+          "servico": "Serviços de Iluminação Pública",
+          "categoria": "Iluminação pública",
+          "similaridade": 0.688
+        },
+        {
+          "servico": "Fiscalização de veículos em situação de abandono",
+          "categoria": "Outros",
+          "similaridade": 0.6449
         }
       ]
     },
@@ -488,6 +659,16 @@
           "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
           "categoria": "Sinalização de trânsito",
           "similaridade": 0.691
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6601
+        },
+        {
+          "servico": "Serviços de Iluminação Pública",
+          "categoria": "Iluminação pública",
+          "similaridade": 0.6383
         }
       ]
     },
@@ -505,6 +686,16 @@
           "servico": "Poda e remoção de árvores",
           "categoria": "Praças e áreas verdes",
           "similaridade": 0.7199
+        },
+        {
+          "servico": "Fiscalização de veículos em situação de abandono",
+          "categoria": "Outros",
+          "similaridade": 0.6318
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6276
         }
       ]
     },
@@ -522,6 +713,16 @@
           "servico": "Poda e remoção de árvores",
           "categoria": "Praças e áreas verdes",
           "similaridade": 0.6965
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6528
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6454
         }
       ]
     },
@@ -533,12 +734,22 @@
       "servico_esperado": null,
       "deveria_encontrar": true,
       "encontrado": true,
-      "plano_b": false,
+      "plano_b": true,
       "top3": [
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6469
+        },
         {
           "servico": "Poda e remoção de árvores",
           "categoria": "Praças e áreas verdes",
           "similaridade": 0.6454
+        },
+        {
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.6365
         }
       ]
     },
@@ -718,6 +929,16 @@
           "servico": "Poda e remoção de árvores",
           "categoria": "Praças e áreas verdes",
           "similaridade": 0.6837
+        },
+        {
+          "servico": "Fiscalização de veículos em situação de abandono",
+          "categoria": "Outros",
+          "similaridade": 0.6105
+        },
+        {
+          "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
+          "categoria": "Sinalização de trânsito",
+          "similaridade": 0.6018
         }
       ]
     },
@@ -756,8 +977,18 @@
       "servico_esperado": null,
       "deveria_encontrar": true,
       "encontrado": true,
-      "plano_b": false,
+      "plano_b": true,
       "top3": [
+        {
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.781
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.69
+        },
         {
           "servico": "Tapa-buraco",
           "categoria": "Buraco ou pavimento",
@@ -773,12 +1004,22 @@
       "servico_esperado": null,
       "deveria_encontrar": true,
       "encontrado": true,
-      "plano_b": false,
+      "plano_b": true,
       "top3": [
+        {
+          "servico": "Serviços de Iluminação Pública",
+          "categoria": "Iluminação pública",
+          "similaridade": 0.7709
+        },
         {
           "servico": "Atendimento da CET (Companhia de Engenharia de Tráfego) pela Central SP156",
           "categoria": "Sinalização de trânsito",
           "similaridade": 0.7037
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.6526
         }
       ]
     },
@@ -790,8 +1031,18 @@
       "servico_esperado": null,
       "deveria_encontrar": true,
       "encontrado": true,
-      "plano_b": false,
+      "plano_b": true,
       "top3": [
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.7443
+        },
+        {
+          "servico": "Fiscalização de veículos em situação de abandono",
+          "categoria": "Outros",
+          "similaridade": 0.6559
+        },
         {
           "servico": "Poda e remoção de árvores",
           "categoria": "Praças e áreas verdes",
@@ -813,6 +1064,16 @@
           "servico": "Tapa-buraco",
           "categoria": "Buraco ou pavimento",
           "similaridade": 0.7103
+        },
+        {
+          "servico": "Solicitar limpeza de bueiros, boca de lobo e poços de visita",
+          "categoria": "Bueiro e drenagem",
+          "similaridade": 0.6754
+        },
+        {
+          "servico": "Calçadas",
+          "categoria": "Calçada e acessibilidade",
+          "similaridade": 0.6636
         }
       ]
     },
@@ -830,6 +1091,16 @@
           "servico": "Serviços de Iluminação Pública",
           "categoria": "Iluminação pública",
           "similaridade": 0.5868
+        },
+        {
+          "servico": "Fiscalização de Posturas Municipais",
+          "categoria": "Lixo e limpeza",
+          "similaridade": 0.5741
+        },
+        {
+          "servico": "Poda e remoção de árvores",
+          "categoria": "Praças e áreas verdes",
+          "similaridade": 0.5737
         }
       ]
     }

@@ -2,11 +2,17 @@
 
 Passos:
 1. Junta título e descrição do problema num texto só e gera o vetor dele.
-2. Se o problema tem uma categoria útil (vinda do Spring AI), busca só nos trechos dessa categoria.
-3. Se a busca filtrada vier fraca (abaixo do limiar) ou vazia, busca na base toda. Isso cobre o
-   caso de o Spring AI ter errado a categoria.
-4. Agrupa os trechos por serviço e ordena os serviços pela melhor similaridade.
-5. Se nem o melhor serviço passar do limiar, responde que não encontrou, para o LLM não inventar.
+2. Busca na base toda e agrupa os trechos por serviço, ordenando pela melhor similaridade.
+3. Se o problema tem uma categoria útil (vinda do Spring AI), busca também só nessa categoria e
+   garante que a melhor ficha dela esteja entre as fichas enviadas ao Gemini. A categoria é uma
+   preferência, não uma restrição: se o Spring AI errou, a ficha certa de outra categoria continua
+   na lista (plano B da categoria).
+4. Se nem o melhor serviço passar do limiar, responde que não encontrou, para o LLM não inventar.
+
+Por que não filtrar: a avaliação de 18/11 mostrou que, com a escala comprimida do
+gemini-embedding-001, a ficha da categoria errada ainda pontua de 0,65 a 0,70. Uma busca só na
+categoria nunca parecia "fraca", então a busca na base toda nunca era acionada (0 de 3 casos), e o
+Gemini recebia só fichas da categoria errada.
 """
 
 from __future__ import annotations
@@ -19,6 +25,7 @@ from app.fichas import CATEGORIAS
 
 SEM_FILTRO = {None, "", "Outros"}
 TRECHOS_POR_CONSULTA = 12  # trechos lidos da base antes de agrupar por serviço
+VAGAS_NO_PROMPT = 3  # quantas fichas o Gemini recebe (FICHAS_NO_PROMPT em gerador.py)
 
 
 @dataclass
@@ -41,8 +48,8 @@ class Candidato:
 class ResultadoBusca:
     encontrado: bool
     candidatos: list[Candidato]
-    filtro_usado: str | None  # categoria usada no filtro, ou None se buscou na base toda
-    caiu_no_plano_b: bool  # True quando a busca filtrada foi fraca e buscou na base toda
+    filtro_usado: str | None  # categoria preferida (a do Spring AI), ou None quando não havia categoria útil
+    caiu_no_plano_b: bool  # True quando a melhor ficha veio de outra categoria que não a preferida
     limiar: float
 
     @property
@@ -121,25 +128,42 @@ class Buscador:
             por_servico[chave].trechos.append(trecho)
         return sorted(por_servico.values(), key=lambda c: c.similaridade, reverse=True)
 
+    @staticmethod
+    def _mesclar(da_categoria: list[Candidato], base_toda: list[Candidato],
+                 vagas: int = VAGAS_NO_PROMPT) -> list[Candidato]:
+        """Junta as duas listas sem repetir serviço, em ordem de similaridade, e garante que a melhor
+        ficha da categoria preferida esteja entre as `vagas` primeiras (as que vão para o Gemini)."""
+        def chave(c: Candidato) -> str:
+            return c.meta.get("arquivo") or c.servico
+
+        # Um serviço da categoria preferida aparece nas duas buscas com a mesma similaridade; fica a
+        # versão da busca na categoria, que traz mais trechos daquela ficha.
+        vistos: dict[str, Candidato] = {}
+        for c in da_categoria + base_toda:
+            vistos.setdefault(chave(c), c)
+        candidatos = sorted(vistos.values(), key=lambda c: c.similaridade, reverse=True)
+        if da_categoria:
+            posicao = candidatos.index(vistos[chave(da_categoria[0])])
+            if posicao >= vagas:
+                candidatos.insert(vagas - 1, candidatos.pop(posicao))
+        return candidatos
+
     def buscar(self, titulo: str, descricao: str, categoria: str | None = None,
                usar_filtro: bool = True) -> ResultadoBusca:
+        """`usar_filtro=False` ignora a categoria do Spring AI (a avaliação compara as duas formas)."""
         vetor = self.embedder([texto_da_consulta(titulo, descricao)])[0]
 
-        filtro = categoria if usar_filtro and categoria in CATEGORIAS and categoria not in SEM_FILTRO else None
-        caiu_no_plano_b = False
-        trechos = self._consultar(vetor, filtro)
-        candidatos = self._agrupar(trechos)
+        preferida = categoria if usar_filtro and categoria in CATEGORIAS and categoria not in SEM_FILTRO else None
+        candidatos = self._agrupar(self._consultar(vetor, None))
+        if preferida:
+            candidatos = self._mesclar(self._agrupar(self._consultar(vetor, preferida)), candidatos)
 
-        if filtro and (not candidatos or candidatos[0].similaridade < self.limiar):
-            caiu_no_plano_b = True
-            candidatos = self._agrupar(self._consultar(vetor, None))
-            filtro = None
-
+        caiu_no_plano_b = bool(preferida and candidatos and candidatos[0].categoria != preferida)
         encontrado = bool(candidatos) and candidatos[0].similaridade >= self.limiar
         return ResultadoBusca(
             encontrado=encontrado,
             candidatos=candidatos,
-            filtro_usado=filtro,
+            filtro_usado=preferida,
             caiu_no_plano_b=caiu_no_plano_b,
             limiar=self.limiar,
         )

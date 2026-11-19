@@ -13,6 +13,9 @@ htmlcov/
 # embeddings do Gemini, para o Render não gastar cota da API a cada deploy. Recrie e faça
 # commit de novo sempre que mudar uma ficha.
 
+# Progresso da avaliação da geração feita em partes (cota diária do Gemini)
+data/avaliacao/geracao_parcial.json
+
 # Cache dos modelos de embeddings baixados
 .cache/
 local_cache/

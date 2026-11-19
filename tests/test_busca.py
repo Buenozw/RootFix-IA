@@ -1,7 +1,8 @@
 """Testa a busca e a avaliação com fichas FICTÍCIAS e um embedder simples de palavras.
 
 O embedder de teste conta palavras de um vocabulário pequeno: textos com as mesmas palavras
-ficam parecidos. Assim dá para testar filtro, plano B e limiar sem baixar o modelo real.
+ficam parecidos. Assim dá para testar a preferência por categoria, o plano B e o limiar sem baixar o
+modelo real.
 """
 
 import math
@@ -16,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from avaliar_busca import FIM, INICIO, avaliar, gravar_relatorio, relatorio  # noqa: E402
 from indexar import indexar  # noqa: E402
 
-from app.busca import Buscador  # noqa: E402
+from app.busca import Buscador, Candidato  # noqa: E402
 
 VOCABULARIO = ["buraco", "asfalto", "pneu", "poste", "lampada", "escuro", "bueiro", "entupido", "alaga",
                "chuva", "festa", "som"]
@@ -71,8 +72,36 @@ def test_categoria_errada_cai_no_plano_b(tmp_path):
     buscador = Buscador(embedder_palavras, montar_base(tmp_path), limiar=0.5)
     r = buscador.buscar("Bueiro entupido", "quando tem chuva alaga tudo", "Buraco ou pavimento")
     assert r.caiu_no_plano_b
-    assert r.filtro_usado is None
+    assert r.filtro_usado == "Buraco ou pavimento"  # a categoria foi preferida, mas não escondeu as outras
     assert r.melhor.servico == "Bueiro fictício"
+    assert "Tapa fictício" in [c.servico for c in r.candidatos[:3]]
+
+
+def _candidato(nome: str, categoria: str, similaridade: float) -> Candidato:
+    return Candidato(servico=nome, categoria=categoria, similaridade=similaridade, meta={"arquivo": f"{nome}.md"})
+
+
+def test_categoria_errada_mas_com_similaridade_alta_nao_esconde_a_ficha_certa():
+    # O defeito da avaliação de 18/11: a ficha da categoria errada passava do limiar (0,70),
+    # então a busca só na categoria nunca era trocada pela base toda.
+    da_categoria = [_candidato("CET", "Sinalização de trânsito", 0.70)]
+    base_toda = [_candidato("Iluminação", "Iluminação pública", 0.78), _candidato("CET", "Sinalização de trânsito", 0.70)]
+    candidatos = Buscador._mesclar(da_categoria, base_toda)
+    assert [c.servico for c in candidatos] == ["Iluminação", "CET"]
+
+
+def test_melhor_ficha_da_categoria_preferida_sempre_vai_para_o_gemini():
+    base_toda = [_candidato(f"S{i}", "Lixo e limpeza", 0.80 - i / 100) for i in range(5)]
+    da_categoria = [_candidato("Praça", "Praças e áreas verdes", 0.60)]
+    candidatos = Buscador._mesclar(da_categoria, base_toda, vagas=3)
+    assert [c.servico for c in candidatos[:3]] == ["S0", "S1", "Praça"]
+    assert len(candidatos) == 6  # nada se perde, só muda de posição
+
+
+def test_servico_repetido_nas_duas_buscas_aparece_uma_vez():
+    luz = _candidato("Luz", "Iluminação pública", 0.75)
+    candidatos = Buscador._mesclar([luz], [_candidato("Luz", "Iluminação pública", 0.75)])
+    assert candidatos == [luz]
 
 
 def test_outros_e_sem_categoria_buscam_na_base_toda(tmp_path):
@@ -115,7 +144,8 @@ def test_avaliacao_calcula_metricas_e_limiar(tmp_path):
     cf = r["com_filtro"]
     assert cf["casos_validos"] == 2 and cf["categoria_top1"] == 2
     assert cf["casos_com_servico"] == 1 and cf["servico_top1"] == 1 and cf["mrr"] == 1.0
-    assert r["plano_b"] == {"casos_categoria_errada": 1, "acionado": 1, "categoria_certa_no_fim": 1}
+    assert r["plano_b"] == {"casos_categoria_errada": 1, "acionado": 1, "categoria_certa_no_fim": 1,
+                           "categoria_certa_para_o_gemini": 1}
     assert r["nao_revisados"] == 1
     assert len(r["varredura"]) == 11
     assert r["limiar_sugerido"] in [v["limiar"] for v in r["varredura"]]

@@ -5,7 +5,16 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from avaliar_geracao import FIM, INICIO, avaliar, citacoes_inventadas, desviou, relatorio  # noqa: E402
+from avaliar_geracao import (  # noqa: E402
+    FIM,
+    INICIO,
+    GeminiVigiado,
+    assinatura_da_rodada,
+    avaliar,
+    citacoes_inventadas,
+    desviou,
+    relatorio,
+)
 
 from app.modelos import Encaminhamento, Fonte  # noqa: E402
 
@@ -88,3 +97,92 @@ def test_nao_encontrar_num_caso_de_desvio_conta_como_resistencia():
         return Encaminhamento(encontrado=False, aviso="a")
 
     assert avaliar(casos, recusa, FICHAS)["resistiu_ao_desvio"] == (1, 1)
+
+
+# Rodada em partes: a cota gratuita do Gemini (20 pedidos por dia) é menor que o número de casos
+
+
+class ErroDaApi(Exception):
+    def __init__(self, code):
+        super().__init__(f"{code} RESOURCE_EXHAUSTED. Please retry in 5h18m17.143s.")
+        self.code = code
+
+
+class ClienteFalso:
+    """Falha com o código pedido para os títulos listados e conta as chamadas."""
+
+    def __init__(self, falhas=None):
+        self.models = self
+        self.falhas = falhas or {}
+        self.chamadas = []
+
+    def generate_content(self, contents, **_):
+        self.chamadas.append(contents)
+        if contents in self.falhas:
+            raise ErroDaApi(self.falhas[contents])
+        return "ok"
+
+
+def executar_com(vigia):
+    """Imita o serviço: chama o Gemini e, se ele falhar, devolve o plano B sem contar o erro."""
+    def executar(problema):
+        try:
+            vigia.generate_content(contents=problema.titulo)
+        except Exception:
+            return Encaminhamento(encontrado=True, servico="Luz fictícia", categoria="Iluminação pública",
+                                  fontes=FONTE, texto_gerado=False, aviso="plano B")
+        return executar_falso(problema)
+    return executar
+
+
+def test_cota_esgotada_para_a_rodada_e_deixa_o_resto_pendente():
+    vigia = GeminiVigiado(ClienteFalso({"Festa": 429}))
+    medidos = []
+    r = avaliar(CASOS, executar_com(vigia), FICHAS, vigia=vigia, ao_medir=medidos.append)
+    assert [d["id"] for d in r["detalhe"]] == ["a"]
+    assert r["pendentes"] == ["b", "c"] and r["parou_por_cota"] and r["espera_da_cota"] == "5h18m"
+    assert vigia._cliente.chamadas == ["Poste", "Festa"]  # depois do 429, não chama mais
+    assert [d["id"] for d in medidos] == ["a"]
+    assert r["recusa_certa"] == (0, 0)  # o plano B do caso "Festa" não entra nas métricas
+
+
+def test_erro_passageiro_deixa_so_aquele_caso_pendente():
+    vigia = GeminiVigiado(ClienteFalso({"Poste": 503}))
+    r = avaliar(CASOS[:2], executar_com(vigia), FICHAS, vigia=vigia)
+    assert r["pendentes"] == ["a"] and not r["parou_por_cota"]
+    assert [d["id"] for d in r["detalhe"]] == ["b"]
+
+
+def test_rodada_continua_de_onde_parou():
+    primeira = avaliar(CASOS, executar_com(v := GeminiVigiado(ClienteFalso({"Festa": 429}))), FICHAS, vigia=v)
+    feitos = {d["id"]: d for d in primeira["detalhe"]}
+
+    vigia = GeminiVigiado(ClienteFalso())
+    r = avaliar(CASOS, executar_com(vigia), FICHAS, feitos=feitos, vigia=vigia)
+    assert vigia._cliente.chamadas == ["Festa", "Poste"]  # só os casos b e c
+    assert [d["id"] for d in r["detalhe"]] == ["a", "b", "c"] and r["pendentes"] == []
+    assert r["recusa_certa"] == (1, 1) and r["avaliados"] == r["total_casos"] == 3
+
+
+def test_relatorio_avisa_quando_a_rodada_esta_incompleta():
+    vigia = GeminiVigiado(ClienteFalso({"Festa": 429}))
+    texto = relatorio(avaliar(CASOS, executar_com(vigia), FICHAS, vigia=vigia), None)
+    assert "Rodada incompleta" in texto and "1 de 3 casos avaliados" in texto and "Faltam: b, c" in texto
+
+
+def test_vigia_esquece_o_erro_quando_a_nova_tentativa_funciona():
+    cliente = ClienteFalso({"x": 400})
+    vigia = GeminiVigiado(cliente)
+    try:
+        vigia.generate_content(contents="x")
+    except ErroDaApi:
+        pass
+    cliente.falhas.clear()
+    vigia.generate_content(contents="x")  # o gerador repete sem o raciocínio mínimo
+    assert vigia.erro is None
+
+
+def test_mudar_limiar_ou_modelo_recomeca_a_rodada():
+    assert assinatura_da_rodada(0.5, "m") == assinatura_da_rodada(0.5, "m")
+    assert assinatura_da_rodada(0.5, "m") != assinatura_da_rodada(0.65, "m")
+    assert assinatura_da_rodada(0.5, "m") != assinatura_da_rodada(0.5, "outro")
